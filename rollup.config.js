@@ -7,14 +7,16 @@ import * as meta from "./package.json";
 
 const config = {
   input: "src/index.js",
+  external: Object.keys(meta.dependencies || {}).filter(key => /^chrt-/.test(key)),
   output: {
-    file: `dist/chrt.js`,
+    file: `dist/${meta.name}.js`,
     name: "chrt",
     format: "umd",
     indent: false,
     extend: true,
     exports: 'named',
     banner: `// ${meta.homepage} v${meta.version} Copyright ${(new Date).getFullYear()} ${meta.author}`,
+    globals: Object.assign({}, ...Object.keys(meta.dependencies || {}).filter(key => /^chrt-/.test(key)).map(key => ({[key]: "chrt"}))),
   },
   plugins: [
     commonjs(),
@@ -34,7 +36,7 @@ export default [
     ...config,
     output: {
       ...config.output,
-      file: `dist/chrt.min.js`
+      file: `dist/${meta.name}.min.js`,
     },
     plugins: [
       ...config.plugins,

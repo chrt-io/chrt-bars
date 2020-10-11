@@ -1,7 +1,7 @@
 import { isNull } from '~/helpers';
 import { createSVG as create } from '~/layout';
 import { lineWidth, lineColor, fillColor, width } from './lib';
-import chrtGeneric from '../chrtGeneric';
+import { chrtGeneric } from 'chrt-core';
 
 const DEFAULT_STROKE_WIDTH = 0;
 const DEAULT_LINE_COLOR = '#000';

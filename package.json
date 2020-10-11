@@ -1,8 +1,8 @@
 {
-  "name": "chrt",
-  "version": "1.0.0",
-  "description": "small atomic charting components",
-  "main": "dist/chrt.js",
+  "name": "chrt-bars",
+  "version": "0.0.0",
+  "description": "Bar chart component for Chrt",
+  "main": "dist/chrt-bars.js",
   "module": "src/index.j",
   "watch": {
     "build": {
@@ -14,7 +14,6 @@
   },
   "scripts": {
     "test": "jest",
-    "test:scales": "jest -i test/scales",
     "build": "rollup -c",
     "lint": "eslint src --fix",
     "watch": "npm-watch"
@@ -35,6 +34,9 @@
     "url": "https://gitlab.com/chrt/exploration/issues"
   },
   "homepage": "chrt.io",
+  "dependencies": {
+    "chrt-core": "1"
+  },
   "devDependencies": {
     "@babel/core": "^7.9.6",
     "@babel/plugin-transform-modules-commonjs": "^7.10.1",
