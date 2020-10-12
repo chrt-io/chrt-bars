@@ -1,6 +1,6 @@
 {
   "name": "chrt-bars",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Bar chart component for Chrt",
   "main": "dist/chrt-bars.js",
   "module": "src/index.j",
