@@ -19,6 +19,8 @@ function chrtBars() {
   this.barRatioWidth = DEFAULT_BAR_RADIO_WIDTH;
   this.fillColor = DEAULT_FILL_COLOR;
 
+  this.fields.y0 = 'y0';
+
   this.draw = () => {
     const { _margins, scales } = this.parentNode;
     const _data = this._data.length ? this._data : this.parentNode._data;
@@ -48,9 +50,16 @@ function chrtBars() {
           this.g.appendChild(rect);
         }
         const x = scales['x'](d[this.fields.x]) - this.barWidth / 2;
+        if(isNaN(x)) {
+          return;
+        }
         const y = scales['y'](d[this.fields.y]);
         // const y0 = scales['y'](0);
-        const y0 = scales['y'].isLog() ? (scales['y'].range[0] - _margins.bottom) : scales['y'](0);
+        let y0 = !isNull(this.fields.y0) ? scales['y'](d[this.fields.y0]) : null;
+        if(isNull(y0)) {
+          y0 = scales['y'].isLog() ? (scales['y'].range[0] - _margins.bottom) : scales['y'](0);
+        }
+        // console.log('--->', d, this.fields)
         rect.setAttribute('x', x);
         rect.setAttribute('y', y > y0 ? y0 : y);
         rect.setAttribute('width', this.barWidth);
