@@ -13,7 +13,9 @@ function chrtBars() {
   chrtGeneric.call(this);
   this.type = 'series';
 
-  this._stacked = false;
+  this._stacked = null;
+  this._grouped = 1;
+  this._groupIndex = 0;
 
   this.strokeWidth = DEFAULT_STROKE_WIDTH;
   this.stroke = DEAULT_LINE_COLOR;
@@ -38,7 +40,11 @@ function chrtBars() {
         return acc;
       }, scales['x'].barwidth);
       const flooredBarWidth = Math.floor(this.barWidth);
-      this.barWidth = (flooredBarWidth || this.barWidth) * this.barRatioWidth;
+      const barWidth = (flooredBarWidth || this.barWidth) || 0;
+      const _grouped = this._stacked ? this._stacked._grouped : this._grouped || this._grouped;
+      const _groupIndex = this._stacked ? this._stacked._groupIndex : this._groupIndex || this._groupIndex;
+      this.barWidth = barWidth / (_grouped) * this.barRatioWidth;
+      this.g.setAttribute('transform', `translate(${barWidth / _grouped * _groupIndex + (barWidth/_grouped)/2 - barWidth/2}, 0)`)
 
       const xAxis = this.parentNode.getAxis('x');
       const axisLineWidth = xAxis ? xAxis.width() : 0;
