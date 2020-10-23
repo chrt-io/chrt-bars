@@ -13,6 +13,8 @@ function chrtBars() {
   chrtGeneric.call(this);
   this.type = 'series';
 
+  this._stacked = false;
+
   this.strokeWidth = DEFAULT_STROKE_WIDTH;
   this.stroke = DEAULT_LINE_COLOR;
   this.barWidth = DEFAULT_BAR_WIDTH;
@@ -53,13 +55,13 @@ function chrtBars() {
         if(isNaN(x)) {
           return;
         }
-        const y = scales['y'](d[this.fields.y]);
+        const y = scales['y'](d[this._stacked ? `stacked_${this.fields.y}` : this.fields.y]);
         // const y0 = scales['y'](0);
-        let y0 = !isNull(this.fields.y0) ? scales['y'](d[this.fields.y0]) : null;
+        let y0 = !isNull(d[this.fields.y0]) ? scales['y'](d[this.fields.y0]) : null;
         if(isNull(y0)) {
           y0 = scales['y'].isLog() ? (scales['y'].range[0] - _margins.bottom) : scales['y'](0);
         }
-        // console.log('--->', d, this.fields)
+        // console.log('--->', d, y0)
         rect.setAttribute('x', x);
         rect.setAttribute('y', y > y0 ? y0 : y);
         rect.setAttribute('width', this.barWidth);
