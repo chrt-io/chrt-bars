@@ -21,8 +21,7 @@ function chrtBars() {
   this.stroke = DEAULT_LINE_COLOR;
   this.barWidth = DEFAULT_BAR_WIDTH;
   this.barRatioWidth = DEFAULT_BAR_RADIO_WIDTH;
-  this.fillColor = DEAULT_FILL_COLOR;
-
+  this.getFillColor = () => DEAULT_FILL_COLOR;
   this.fields.y0 = 'y0';
 
   this.draw = () => {
@@ -49,12 +48,13 @@ function chrtBars() {
       const xAxis = this.parentNode.getAxis('x');
       const axisLineWidth = xAxis ? xAxis.width() : 0;
 
-      _data.forEach((d, i) => {
+      _data.forEach((d, i, arr) => {
         // const point = points.find(p => )
         let rect = this.g.querySelector(`[data-id='rect-${name}-${i}']`);
         if (!rect) {
           rect = create('rect');
           rect.setAttribute('data-id', `rect-${name}-${i}`);
+          // rect.setAttribute('shape-rendering', 'crispEdges');
           this.g.appendChild(rect);
         }
         const x = scales['x'](d[this.fields.x]) - this.barWidth / 2;
@@ -72,7 +72,7 @@ function chrtBars() {
         rect.setAttribute('y', y > y0 ? y0 : y);
         rect.setAttribute('width', this.barWidth);
         rect.setAttribute('height', Math.max(Math.abs(y - y0), Math.abs(y - y0) - axisLineWidth / 2));
-        rect.setAttribute('fill', this.fillColor);
+        rect.setAttribute('fill', this.getFillColor(d, i, arr));
         rect.setAttribute('stroke', this.stroke);
         rect.setAttribute('stroke-width', this.strokeWidth);
       });

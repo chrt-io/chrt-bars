@@ -1,12 +1,13 @@
 export default function fillColor(value) {
   if(!value) {
-    return this.fillColor;
+    return this.getFillColor();
   }
 
   if (typeof value === 'function') {
     // something will go here
+    this.getFillColor = value;
   } else {
-    this.fillColor = value;
+    this.getFillColor = () => value;
   }
   return this;
 }
