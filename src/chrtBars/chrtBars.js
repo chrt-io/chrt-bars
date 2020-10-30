@@ -94,4 +94,7 @@ chrtBars.prototype = Object.assign(chrtBars.prototype, {
   fill: fillColor,
 });
 
-export default chrtBars;
+// export default chrtBars;
+export default function() {
+  return new chrtBars();
+}

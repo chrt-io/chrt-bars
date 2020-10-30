@@ -3,7 +3,7 @@
   "version": "0.0.5",
   "description": "Bar chart component for Chrt",
   "main": "dist/chrt-bars.js",
-  "module": "src/index.j",
+  "module": "dist/chrt-bars.esm.js",
   "watch": {
     "build": {
       "patterns": [
