@@ -35,7 +35,7 @@
   },
   "homepage": "chrt.io",
   "dependencies": {
-    "chrt-core": "^0.0.6"
+    "chrt-core": "^0.0.8"
   },
   "devDependencies": {
     "@babel/core": "^7.12.3",
@@ -43,11 +43,11 @@
     "@babel/preset-env": "^7.12.1",
     "@rollup/plugin-babel": "^5.2.1",
     "@rollup/plugin-node-resolve": "^10.0.0",
-    "babel-jest": "^26.6.1",
+    "babel-jest": "^26.6.3",
     "babel-plugin-root-import": "^6.6.0",
-    "eslint": "^7.12.1",
+    "eslint": "^7.13.0",
     "husky": "^4.3.0",
-    "jest": "^26.6.1",
+    "jest": "^26.6.3",
     "npm-watch": "^0.7.0",
     "rollup": "2",
     "rollup-plugin-commonjs": "^10.1.0",

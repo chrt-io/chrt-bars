@@ -1,6 +1,6 @@
 import { isNull } from '~/helpers';
 import { createSVG as create } from '~/layout';
-import { lineWidth, lineColor, fillColor, width } from './lib';
+import { lineWidth, lineColor, fill, width } from './lib';
 import { chrtGeneric } from 'chrt-core';
 
 const DEFAULT_STROKE_WIDTH = 0;
@@ -17,18 +17,19 @@ function chrtBars() {
   this._grouped = 1;
   this._groupIndex = 0;
 
-  this.strokeWidth = DEFAULT_STROKE_WIDTH;
-  this.stroke = DEAULT_LINE_COLOR;
-  this.barWidth = DEFAULT_BAR_WIDTH;
-  this.barRatioWidth = DEFAULT_BAR_RADIO_WIDTH;
-  this.getFillColor = () => DEAULT_FILL_COLOR;
+  //this.strokeWidth = DEFAULT_STROKE_WIDTH;
+  let _barWidth = DEFAULT_BAR_WIDTH;
+  this.attr('barRatioWidth', DEFAULT_BAR_RADIO_WIDTH);
+  this.attr('stroke', DEAULT_LINE_COLOR);
+  this.attr('fill', DEAULT_FILL_COLOR);
+  this.attr('strokeWidth', DEFAULT_STROKE_WIDTH);
   this.fields.y0 = 'y0';
 
   this.draw = () => {
     const { _margins, scales } = this.parentNode;
     const _data = this._data.length ? this._data : this.parentNode._data;
     if(!isNull(_data)) {
-      this.barWidth = _data.reduce((acc, d, i, arr) => {
+      _barWidth = _data.reduce((acc, d, i, arr) => {
         const next = arr[i + 1];
         if(!isNull(d) && !isNull(d[this.fields.x]) && !isNull(next) && !isNull(next[this.fields.x])) {
           const x1 = scales['x'](d[this.fields.x]);
@@ -38,11 +39,11 @@ function chrtBars() {
         }
         return acc;
       }, scales['x'].barwidth);
-      const flooredBarWidth = Math.floor(this.barWidth);
-      const barWidth = (flooredBarWidth || this.barWidth) || 0;
+      const flooredBarWidth = Math.floor(_barWidth);
+      const barWidth = (flooredBarWidth || _barWidth) || 0;
       const _grouped = this._stacked ? this._stacked._grouped : this._grouped || this._grouped;
       const _groupIndex = this._stacked ? this._stacked._groupIndex : this._groupIndex || this._groupIndex;
-      this.barWidth = barWidth / (_grouped) * this.barRatioWidth;
+      _barWidth = barWidth / (_grouped) * this.attr('barRatioWidth')();
       this.g.setAttribute('transform', `translate(${barWidth / _grouped * _groupIndex + (barWidth/_grouped)/2 - barWidth/2}, 0)`)
 
       const xAxis = this.parentNode.getAxis('x');
@@ -57,7 +58,7 @@ function chrtBars() {
           // rect.setAttribute('shape-rendering', 'crispEdges');
           this.g.appendChild(rect);
         }
-        const x = scales['x'](d[this.fields.x]) - this.barWidth / 2;
+        const x = scales['x'](d[this.fields.x]) - _barWidth / 2;
         if(isNaN(x)) {
           return;
         }
@@ -70,11 +71,11 @@ function chrtBars() {
         // console.log('--->', d, y0)
         rect.setAttribute('x', x);
         rect.setAttribute('y', y > y0 ? y0 : y);
-        rect.setAttribute('width', this.barWidth);
+        rect.setAttribute('width', _barWidth);
         rect.setAttribute('height', Math.max(Math.abs(y - y0), Math.abs(y - y0) - axisLineWidth / 2));
-        rect.setAttribute('fill', this.getFillColor(d, i, arr));
-        rect.setAttribute('stroke', this.stroke);
-        rect.setAttribute('stroke-width', this.strokeWidth);
+        rect.setAttribute('fill', this.attr('fill')(d, i, arr));
+        rect.setAttribute('stroke', this.attr('stroke')(d, i, arr));
+        rect.setAttribute('stroke-width', this.attr('strokeWidth')(d, i, arr));
       });
 
       // // // console.log('points', points);
@@ -91,7 +92,7 @@ chrtBars.prototype = Object.assign(chrtBars.prototype, {
   width,
   strokeWidth: lineWidth,
   color: lineColor,
-  fill: fillColor,
+  fill,
 });
 
 // export default chrtBars;

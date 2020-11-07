@@ -1,12 +1,3 @@
 export default function lineWidth(value) {
-  if(!value) {
-    return this.strokeWidth;
-  }
-
-  if (typeof value === 'function') {
-    // something will go here
-  } else {
-    this.strokeWidth = value;
-  }
-  return this;
+  return this.attr('strokeWidth', value, (value) => Math.max(0, value));
 }
