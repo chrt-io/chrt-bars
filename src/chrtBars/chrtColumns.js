@@ -9,7 +9,7 @@ const DEAULT_FILL_COLOR = '#ddd';
 const DEFAULT_BAR_WIDTH = 3;
 const DEFAULT_BAR_RADIO_WIDTH = 1;
 
-function chrtBars() {
+function chrtColumns() {
   chrtGeneric.call(this);
   this.type = 'series';
 
@@ -24,56 +24,46 @@ function chrtBars() {
   this.attr('fill', DEAULT_FILL_COLOR);
   this.attr('strokeWidth', DEFAULT_STROKE_WIDTH);
 
-  // this.getXScale = () => {
-  //   if(isNull(this.fields.x)) {
-  //     this.fields.x = scales.x[this.scales.x].field;
-  //   }
-  //   return this.parentNode.scales.x[this.scales.x];
-  // }
-
-  this.barWidth = () => _barWidth;
+  // console.log('BARCHART FIELDS', this.fields)
 
   this.draw = () => {
     const { _margins, scales } = this.parentNode;
 
-    if(isNull(this.fields.y)) {
-      this.fields.y = scales.y[this.scales.y].field;
-    }
     if(isNull(this.fields.x)) {
-      //console.log('this.scales', this.scales)
-      //console.log('this.parentNode.scales', this.parentNode.scales)
       this.fields.x = scales.x[this.scales.x].field;
     }
-    if(isNull(this.fields.x0)) {
-      this.fields.x0 = `${scales.x[this.scales.x].field}0`;
+    if(isNull(this.fields.y)) {
+      //console.log('this.scales', this.scales)
+      //console.log('this.parentNode.scales', this.parentNode.scales)
+      this.fields.y = scales.y[this.scales.y].field;
+    }
+    if(isNull(this.fields.y0)) {
+      this.fields.y0 = `${scales.y[this.scales.y].field}0`;
     }
 
     const _scaleX = scales.x[this.scales.x];
     const _scaleY = scales.y[this.scales.y];
-    // console.log('_scaleY.barwidth', _scaleY.barwidth)
     const _data = this._data.length ? this._data : this.parentNode._data;
     if(!isNull(_data)) {
       _barWidth = _data.reduce((acc, d, i, arr) => {
         const next = arr[i + 1];
-        if(!isNull(d) && !isNull(d[this.fields.y]) && !isNull(next) && !isNull(next[this.fields.y])) {
-          const y1 = _scaleY(d[this.fields.y]);
-          const y2 = _scaleY(next[this.fields.y]);
-          const delta = Math.abs(y2 - y1);
+        if(!isNull(d) && !isNull(d[this.fields.x]) && !isNull(next) && !isNull(next[this.fields.x])) {
+          const x1 = _scaleX(d[this.fields.x]);
+          const x2 = _scaleX(next[this.fields.x]);
+          const delta = Math.abs(x2 - x1);
           acc = delta < acc ? delta : acc;
         }
         return acc;
-      }, Math.abs(_scaleY.barwidth));
-      // console.log('_barWidth', _barWidth)
+      }, _scaleX.barwidth);
       const flooredBarWidth = Math.floor(_barWidth);
       const barWidth = (flooredBarWidth || _barWidth) || 0;
       const _grouped = this._stacked ? this._stacked._grouped : this._grouped || this._grouped;
       const _groupIndex = this._stacked ? this._stacked._groupIndex : this._groupIndex || this._groupIndex;
       _barWidth = barWidth / (_grouped) * this.attr('barRatioWidth')();
-      // this.g.setAttribute('transform', `translate(${barWidth / _grouped * _groupIndex + (barWidth/_grouped)/2 - barWidth/2}, 0)`)
-      this.g.setAttribute('transform', `translate(0, ${barWidth / _grouped * _groupIndex + (barWidth/_grouped)/2 - barWidth/2})`)
+      this.g.setAttribute('transform', `translate(${barWidth / _grouped * _groupIndex + (barWidth/_grouped)/2 - barWidth/2}, 0)`)
 
-      const yAxis = this.parentNode.getAxis('y');
-      const axisLineWidth = yAxis ? yAxis.width() : 0;
+      const xAxis = this.parentNode.getAxis('x');
+      const axisLineWidth = xAxis ? xAxis.width() : 0;
 
       _data.forEach((d, i, arr) => {
         // const point = points.find(p => )
@@ -84,21 +74,21 @@ function chrtBars() {
           // rect.setAttribute('shape-rendering', 'crispEdges');
           this.g.appendChild(rect);
         }
-        const y = _scaleY(d[this.fields.y]) - _barWidth / 2;
-        if(isNaN(y)) {
+        const x = _scaleX(d[this.fields.x]) - _barWidth / 2;
+        if(isNaN(x)) {
           return;
         }
-        const x = _scaleX(d[this._stacked ? `stacked_${this.fields.x}` : this.fields.x]);
+        const y = _scaleY(d[this._stacked ? `stacked_${this.fields.y}` : this.fields.y]);
         // const y0 = _scaleY(0);
-        let x0 = !isNull(d[this.fields.x0]) ? _scaleX(d[this.fields.x0]) : null;
-        if(isNull(x0)) {
-          x0 = _scaleX.isLog() ? (_scaleX.range[0] - _margins.left) : _scaleX(0);
+        let y0 = !isNull(d[this.fields.y0]) ? _scaleY(d[this.fields.y0]) : null;
+        if(isNull(y0)) {
+          y0 = _scaleY.isLog() ? (_scaleY.range[0] - _margins.bottom) : _scaleY(0);
         }
         // console.log('--->', d, y0)
-        rect.setAttribute('x', x > x0 ? x0 : x);
-        rect.setAttribute('y', y);
-        rect.setAttribute('width', Math.max(Math.abs(x - x0), Math.abs(x - x0) - axisLineWidth / 2));
-        rect.setAttribute('height', _barWidth);
+        rect.setAttribute('x', x);
+        rect.setAttribute('y', y > y0 ? y0 : y);
+        rect.setAttribute('width', _barWidth);
+        rect.setAttribute('height', Math.max(Math.abs(y - y0), Math.abs(y - y0) - axisLineWidth / 2));
         rect.setAttribute('fill', this.attr('fill')(d, i, arr));
         rect.setAttribute('stroke', this.attr('stroke')(d, i, arr));
         rect.setAttribute('stroke-width', this.attr('strokeWidth')(d, i, arr));
@@ -113,18 +103,17 @@ function chrtBars() {
   };
 }
 
-chrtBars.prototype = Object.create(chrtGeneric.prototype);
-chrtBars.prototype.constructor = chrtBars;
-chrtBars.parent = chrtGeneric.prototype;
+chrtColumns.prototype = Object.create(chrtGeneric.prototype);
+chrtColumns.prototype.constructor = chrtColumns;
+chrtColumns.parent = chrtGeneric.prototype;
 
-chrtBars.prototype = Object.assign(chrtBars.prototype, {
+chrtColumns.prototype = Object.assign(chrtColumns.prototype, {
   width,
   strokeWidth: lineWidth,
   color: lineColor,
   fill,
 });
 
-// export default chrtBars;
 export default function() {
-  return new chrtBars();
+  return new chrtColumns();
 }

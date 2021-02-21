@@ -35,17 +35,17 @@
   },
   "homepage": "chrt.io",
   "dependencies": {
-    "chrt-core": "^0.0.16"
+    "chrt-core": "^0.0.22"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.10",
-    "@babel/plugin-transform-modules-commonjs": "^7.12.1",
-    "@babel/preset-env": "^7.12.11",
-    "@rollup/plugin-babel": "^5.2.2",
-    "@rollup/plugin-node-resolve": "^11.0.1",
+    "@babel/core": "^7.12.17",
+    "@babel/plugin-transform-modules-commonjs": "^7.12.13",
+    "@babel/preset-env": "^7.12.17",
+    "@rollup/plugin-babel": "^5.3.0",
+    "@rollup/plugin-node-resolve": "^11.2.0",
     "babel-jest": "^26.6.3",
     "babel-plugin-root-import": "^6.6.0",
-    "eslint": "^7.16.0",
+    "eslint": "^7.20.0",
     "husky": "^4.3.0",
     "jest": "^26.6.3",
     "npm-watch": "^0.7.0",
