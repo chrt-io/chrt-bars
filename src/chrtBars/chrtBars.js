@@ -24,12 +24,12 @@ function chrtBars() {
   this.attr('fill', DEAULT_FILL_COLOR);
   this.attr('strokeWidth', DEFAULT_STROKE_WIDTH);
 
-  // this.getXScale = () => {
-  //   if(isNull(this.fields.x)) {
-  //     this.fields.x = scales.x[this.scales.x].field;
-  //   }
-  //   return this.parentNode.scales.x[this.scales.x];
-  // }
+  this.getXScale = () => {
+    if(isNull(this.fields.x)) {
+      this.fields.x = this.parentNode.scales.x[this.scales.x].field;
+    }
+    return this.parentNode.scales.x[this.scales.x];
+  }
 
   this.barWidth = () => _barWidth;
 
