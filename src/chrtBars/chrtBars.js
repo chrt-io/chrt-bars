@@ -1,4 +1,4 @@
-import { isNull } from '~/helpers';
+import { isNull, isInfinity } from '~/helpers';
 import { createSVG as create } from '~/layout';
 import { lineWidth, lineColor, fill, width } from './lib';
 import { chrtGeneric } from 'chrt-core';
@@ -65,12 +65,16 @@ function chrtBars() {
       }, Math.abs(_scaleY.barwidth));
       // console.log('_barWidth', _barWidth)
       const flooredBarWidth = Math.floor(_barWidth);
-      const barWidth = (flooredBarWidth || _barWidth) || 0;
+      let barWidth = (flooredBarWidth || _barWidth) || 0;
+      if(isNaN(barWidth) || isInfinity(barWidth)) {
+        barWidth = 1;
+      }
       const _grouped = this._stacked ? this._stacked._grouped : this._grouped || this._grouped;
       const _groupIndex = this._stacked ? this._stacked._groupIndex : this._groupIndex || this._groupIndex;
       _barWidth = barWidth / (_grouped) * this.attr('barRatioWidth')();
       // this.g.setAttribute('transform', `translate(${barWidth / _grouped * _groupIndex + (barWidth/_grouped)/2 - barWidth/2}, 0)`)
       this.g.setAttribute('transform', `translate(0, ${barWidth / _grouped * _groupIndex + (barWidth/_grouped)/2 - barWidth/2})`)
+      // console.log(barWidth, _grouped, _groupIndex)
 
       const yAxis = this.parentNode.getAxis('y');
       const axisLineWidth = yAxis ? yAxis.width() : 0;
@@ -90,12 +94,15 @@ function chrtBars() {
         }
         const x = _scaleX(d[this._stacked ? `stacked_${this.fields.x}` : this.fields.x]);
         // const y0 = _scaleY(0);
-        let x0 = !isNull(d[this.fields.x0]) ? _scaleX(d[this.fields.x0]) : null;
+        let x0 = !isNull(d[this.fields.x0]) ? (_scaleX.isLog() ? _scaleX.range[0] + _margins.left : _scaleX(d[this.fields.x0])) : null;
         if(isNull(x0)) {
-          x0 = _scaleX.isLog() ? (_scaleX.range[0] - _margins.left) : _scaleX(0);
+          x0 = _scaleX.isLog() ? (_scaleX.range[0] + _margins.left) : _scaleX(0);
         }
+
+        x0 = !isNull(d[this.fields.x0]) ? _scaleX(d[this.fields.x0]) : _scaleX(_scaleX.domain[0]);
+        // console.log('isLog', _scaleX.isLog(), x0,'<',x)
         // console.log('--->', d, y0)
-        rect.setAttribute('x', x > x0 ? x0 : x);
+        rect.setAttribute('x', x0);// > x0 ? x0 : x);
         rect.setAttribute('y', y);
         rect.setAttribute('width', Math.max(Math.abs(x - x0), Math.abs(x - x0) - axisLineWidth / 2));
         rect.setAttribute('height', _barWidth);
