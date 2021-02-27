@@ -24,6 +24,8 @@ function chrtBars() {
   this.attr('fill', DEAULT_FILL_COLOR);
   this.attr('strokeWidth', DEFAULT_STROKE_WIDTH);
 
+  this._classNames = ['chrt-bars'];
+
   this.getXScale = () => {
     if(isNull(this.fields.x)) {
       this.fields.x = this.parentNode.scales.x[this.scales.x].field;
@@ -35,6 +37,8 @@ function chrtBars() {
 
   this.draw = () => {
     const { _margins, scales } = this.parentNode;
+
+    this._classNames.forEach((d) => this.g.classList.add(d));
 
     if(isNull(this.fields.y)) {
       this.fields.y = scales.y[this.scales.y].field;
