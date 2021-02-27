@@ -1,4 +1,4 @@
-import { isNull } from '~/helpers';
+import { isNull, isInfinity } from '~/helpers';
 import { createSVG as create } from '~/layout';
 import { lineWidth, lineColor, fill, width } from './lib';
 import { chrtGeneric } from 'chrt-core';
@@ -65,7 +65,10 @@ function chrtColumns() {
         return acc;
       }, _scaleX.barwidth);
       const flooredBarWidth = Math.floor(_barWidth);
-      const barWidth = (flooredBarWidth || _barWidth) || 0;
+      let barWidth = (flooredBarWidth || _barWidth) || 0;
+      if(isNaN(barWidth) || isInfinity(barWidth)) {
+        barWidth = 1;
+      }
       const _grouped = this._stacked ? this._stacked._grouped : this._grouped || this._grouped;
       const _groupIndex = this._stacked ? this._stacked._groupIndex : this._groupIndex || this._groupIndex;
       _barWidth = barWidth / (_grouped) * this.attr('barRatioWidth')();
