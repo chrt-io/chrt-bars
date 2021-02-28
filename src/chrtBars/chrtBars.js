@@ -73,6 +73,9 @@ function chrtBars() {
       if(isNaN(barWidth) || isInfinity(barWidth)) {
         barWidth = 1;
       }
+      barWidth = barWidth * (this._group ? this._group.width() : 1);
+      //console.log('GROUP WIDTH', this._group ? this._group.width() : 1)
+
       const _grouped = this._stacked ? this._stacked._grouped : this._grouped || this._grouped;
       const _groupIndex = this._stacked ? this._stacked._groupIndex : this._groupIndex || this._groupIndex;
       _barWidth = barWidth / (_grouped) * this.attr('barRatioWidth')();

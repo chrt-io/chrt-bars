@@ -69,10 +69,14 @@ function chrtColumns() {
       if(isNaN(barWidth) || isInfinity(barWidth)) {
         barWidth = 1;
       }
+      barWidth = barWidth * (this._group ? this._group.width() : 1);
+      // console.log('GROUP WIDTH', this._group ? this._group.width() : 1)
+
       const _grouped = this._stacked ? this._stacked._grouped : this._grouped || this._grouped;
       const _groupIndex = this._stacked ? this._stacked._groupIndex : this._groupIndex || this._groupIndex;
       _barWidth = barWidth / (_grouped) * this.attr('barRatioWidth')();
-      this.g.setAttribute('transform', `translate(${barWidth / _grouped * _groupIndex + (barWidth/_grouped)/2 - barWidth/2}, 0)`)
+      const deltaX = barWidth / _grouped * _groupIndex + (barWidth/_grouped)/2 - barWidth/2;
+      this.g.setAttribute('transform', `translate(${deltaX}, 0)`)
 
       const xAxis = this.parentNode.getAxis('x');
       const axisLineWidth = xAxis ? xAxis.width() : 0;
