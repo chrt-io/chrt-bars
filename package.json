@@ -35,7 +35,7 @@
   },
   "homepage": "chrt.io",
   "dependencies": {
-    "chrt-core": "^0.0.23"
+    "chrt-core": "^0.0.24"
   },
   "devDependencies": {
     "@babel/core": "^7.12.17",
