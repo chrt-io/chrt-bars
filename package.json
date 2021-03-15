@@ -1,6 +1,6 @@
 {
   "name": "chrt-bars",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "description": "Bar chart component for Chrt",
   "main": "dist/chrt-bars.js",
   "module": "dist/chrt-bars.esm.js",
