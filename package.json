@@ -15,6 +15,7 @@
   "scripts": {
     "test": "jest",
     "build": "rollup -c",
+    "pretest": "rollup -c",
     "lint": "eslint src --fix",
     "watch": "npm-watch"
   },
