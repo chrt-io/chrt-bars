@@ -34,6 +34,7 @@ function chrtColumns() {
   }
 
   this.draw = () => {
+
     const { _margins, scales } = this.parentNode;
 
     this._classNames.forEach((d) => this.g.classList.add(d));
@@ -53,33 +54,69 @@ function chrtColumns() {
     const _scaleX = scales.x[this.scales.x];
     const _scaleY = scales.y[this.scales.y];
     const _data = this._data.length ? this._data : this.parentNode._data;
+    // console.log(_data,this._data,this.parentNode._data)
+
     if(!isNull(_data)) {
-      _barWidth = _data.reduce((acc, d, i, arr) => {
-        const next = arr[i + 1];
-        if(!isNull(d) && !isNull(d[this.fields.x]) && !isNull(next) && !isNull(next[this.fields.x])) {
-          const x1 = _scaleX(d[this.fields.x]);
-          const x2 = _scaleX(next[this.fields.x]);
-          const delta = Math.abs(x2 - x1);
-          acc = delta < acc ? delta : acc;
-        }
-        return acc;
-      }, _scaleX.barwidth);
+      // _barWidth = _data.reduce((acc, d, i, arr) => {
+      //   const next = arr[i + 1];
+      //
+      //   if(!isNull(d) && !isNull(d[this.fields.x]) && !isNull(next) && !isNull(next[this.fields.x])) {
+      //     const x1 = _scaleX(d[this.fields.x]);
+      //     const x2 = _scaleX(next[this.fields.x]);
+      //     const delta = Math.abs(x2 - x1);
+      //     console.log('!!!!--->',x2,'-',x1,'=',delta, acc)
+      //     // acc = delta < acc ? delta : acc;
+      //     acc = Math.min(delta,acc)
+      //   }
+      //   console.log('acc', acc)
+      //   return acc;
+      // }, _scaleX.barwidth);
+      const padding = this.parentNode.padding();
+      //const rangeWidth = Math.abs((_scaleX.range[1] + padding.right) - (_scaleX.range[0] - padding.left)) - (_margins.left + _margins.right);
+      const rangeWidth = Math.abs((_scaleX.range[1] - _scaleX.range[0]) - (_margins.left+_margins.right));
+      // console.log('rangeWidth', rangeWidth);
+      //_barWidth = Math.abs(_scaleX.range[1] - _scaleX.range[0]) / ((_data.length) || 1);
+      _barWidth = rangeWidth / ((_data.length - (_scaleX.transformation === 'ordinal' ? 0 : 1)) || 1);
+      // console.log('_barWidth', _barWidth)
+      // console.log('_scaleX.barwidth', _scaleX.barwidth)
       const flooredBarWidth = Math.floor(_barWidth);
       let barWidth = (flooredBarWidth || _barWidth) || 0;
       if(isNaN(barWidth) || isInfinity(barWidth)) {
         barWidth = 1;
       }
+      // console.log('calculating barwidth!', barWidth,' * ',(this._group ? this._group.width() : 1))
       barWidth = barWidth * (this._group ? this._group.width() : 1);
       // console.log('GROUP WIDTH', this._group ? this._group.width() : 1)
-
+      // this.parentNode.padding({left: 100, right: 100})
       const _grouped = this._stacked ? this._stacked._grouped : this._grouped || this._grouped;
       const _groupIndex = this._stacked ? this._stacked._groupIndex : this._groupIndex || this._groupIndex;
-      _barWidth = barWidth / (_grouped) * this.attr('barRatioWidth')();
+      _barWidth = barWidth / (_grouped);
       const deltaX = barWidth / _grouped * _groupIndex + (barWidth/_grouped)/2 - barWidth/2;
       this.g.setAttribute('transform', `translate(${deltaX}, 0)`)
 
       const xAxis = this.parentNode.getAxis('x');
       const axisLineWidth = xAxis ? xAxis.width() : 0;
+      // console.log('BARWIDTH', _barWidth, this.attr('barRatioWidth')())
+      // console.log('_scaleX.barwidth', _scaleX.barwidth)
+      if(_data.length) {
+        // console.log('range', _scaleX.range)
+
+        // const firstX = _scaleX(_data[0][this.fields.x]) - _barWidth / 2;
+        /// const firstX = _scaleX.range[0] - _barWidth / 2;
+        // const deltaX = Math.floor(Math.abs((_scaleX.range[0] + _margins.left) - _barWidth / 2));
+        const w = (_scaleX.range[1] - _scaleX.range[0]) - (_margins.left + _margins.right);
+        const bw = w / _data.length;
+        const deltaX = (_scaleX.range[0] - _barWidth / 2);
+        // console.log(deltaX, '<', padding.left)
+        if(!this.parentNode.originalPadding && _scaleX.transformation !== 'ordinal' && deltaX < padding.left) {
+          const padding = this.parentNode.padding();
+          // console.log('DELTAX IS',deltaX,'bw',bw)
+          const newPadding = Object.assign({}, padding, {left: bw/2 + padding.left, right: bw/2 + padding.right})
+          // console.log('newPadding', newPadding)
+          // this.parentNode.originalPadding = this.parentNode.originalPadding || padding;
+          return this.parentNode.padding(newPadding, true);
+        }
+      }
 
       _data.forEach((d, i, arr) => {
         // const point = points.find(p => )
@@ -91,6 +128,7 @@ function chrtColumns() {
           this.g.appendChild(rect);
         }
         const x = _scaleX(d[this.fields.x]) - _barWidth / 2;
+        //const x = _scaleX(d[this.fields.x]) - (_barWidth * this.attr('barRatioWidth')()) / 2;
         if(isNaN(x)) {
           return;
         }
@@ -99,11 +137,13 @@ function chrtColumns() {
         let y0 = !isNull(d[this.fields.y0]) ? _scaleY(d[this.fields.y0]) : null;
         if(isNull(y0)) {
           y0 = _scaleY.isLog() ? (_scaleY.range[0] - _margins.bottom) : _scaleY(0);
+          // y0 = _scaleY.isLog() ? (_scaleY.range[0] - _margins.bottom) : _scaleY(_scaleY.domain[0]);
         }
-        // console.log('--->', d, y0)
-        rect.setAttribute('x', x);
+        // console.log('--->', d, y,'>',y0,'domain',_scaleY.domain)
+        // console.log('x',x)
+        rect.setAttribute('x', x + _barWidth/2 * (1 - this.attr('barRatioWidth')()));
         rect.setAttribute('y', y > y0 ? y0 : y);
-        rect.setAttribute('width', _barWidth);
+        rect.setAttribute('width', _barWidth * this.attr('barRatioWidth')());
         rect.setAttribute('height', Math.max(Math.abs(y - y0), Math.abs(y - y0) - axisLineWidth / 2));
         rect.setAttribute('fill', this.attr('fill')(d, i, arr));
         rect.setAttribute('stroke', this.attr('stroke')(d, i, arr));
