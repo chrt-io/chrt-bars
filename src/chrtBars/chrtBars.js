@@ -1,7 +1,7 @@
 import { isNull, isInfinity } from '~/helpers';
 import { createSVG as create } from '~/layout';
 import { lineWidth, lineColor, fill, width } from './lib';
-import { chrtGeneric } from 'chrt-core';
+import chrtGeneric from 'chrt-object';
 
 const DEFAULT_STROKE_WIDTH = 0;
 const DEAULT_LINE_COLOR = '#000';
