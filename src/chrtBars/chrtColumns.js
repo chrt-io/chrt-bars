@@ -141,10 +141,12 @@ function chrtColumns() {
         }
         // console.log('--->', d, y,'>',y0,'domain',_scaleY.domain)
         // console.log('x',x)
+        const _barLength = !isNaN(y) ? Math.max(Math.abs(y - y0), Math.abs(y - y0) - axisLineWidth / 2) : 0;
+
         rect.setAttribute('x', x + _barWidth/2 * (1 - this.attr('barRatioWidth')()));
         rect.setAttribute('y', y > y0 ? y0 : y);
         rect.setAttribute('width', _barWidth * this.attr('barRatioWidth')());
-        rect.setAttribute('height', Math.max(Math.abs(y - y0), Math.abs(y - y0) - axisLineWidth / 2));
+        rect.setAttribute('height', _barLength);
         rect.setAttribute('fill', this.attr('fill')(d, i, arr));
         rect.setAttribute('stroke', this.attr('stroke')(d, i, arr));
         rect.setAttribute('stroke-width', this.attr('strokeWidth')(d, i, arr));

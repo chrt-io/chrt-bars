@@ -100,6 +100,7 @@ function chrtBars() {
           return;
         }
         const x = _scaleX(d[this._stacked ? `stacked_${this.fields.x}` : this.fields.x]);
+        // console.log('--->',this.fields.x, d[this._stacked ? `stacked_${this.fields.x}` : this.fields.x], x)
         // const y0 = _scaleY(0);
         let x0 = !isNull(d[this.fields.x0]) ? (_scaleX.isLog() ? _scaleX.range[0] + _margins.left : _scaleX(d[this.fields.x0])) : null;
         if(isNull(x0)) {
@@ -107,11 +108,12 @@ function chrtBars() {
         }
 
         x0 = !isNull(d[this.fields.x0]) ? _scaleX(d[this.fields.x0]) : _scaleX(_scaleX.domain[0]);
-        // console.log('isLog', _scaleX.isLog(), x0,'<',x)
-        // console.log('--->', d, y0)
+
+        const _barLength = !isNaN(x) ? Math.max(Math.abs(x - x0), Math.abs(x - x0) - axisLineWidth / 2) : 0;
+        // console.log(x,x0,axisLineWidth)
         rect.setAttribute('x', x0);// > x0 ? x0 : x);
         rect.setAttribute('y', y);
-        rect.setAttribute('width', Math.max(Math.abs(x - x0), Math.abs(x - x0) - axisLineWidth / 2));
+        rect.setAttribute('width', _barLength);
         rect.setAttribute('height', _barWidth);
         rect.setAttribute('fill', this.attr('fill')(d, i, arr));
         rect.setAttribute('stroke', this.attr('stroke')(d, i, arr));
