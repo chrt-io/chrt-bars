@@ -55,22 +55,7 @@ function chrtColumns() {
     const _scaleY = scales.y[this.scales.y];
     const _data = this._data.length ? this._data : this.parentNode._data;
     // console.log(_data,this._data,this.parentNode._data)
-
     if(!isNull(_data)) {
-      // _barWidth = _data.reduce((acc, d, i, arr) => {
-      //   const next = arr[i + 1];
-      //
-      //   if(!isNull(d) && !isNull(d[this.fields.x]) && !isNull(next) && !isNull(next[this.fields.x])) {
-      //     const x1 = _scaleX(d[this.fields.x]);
-      //     const x2 = _scaleX(next[this.fields.x]);
-      //     const delta = Math.abs(x2 - x1);
-      //     console.log('!!!!--->',x2,'-',x1,'=',delta, acc)
-      //     // acc = delta < acc ? delta : acc;
-      //     acc = Math.min(delta,acc)
-      //   }
-      //   console.log('acc', acc)
-      //   return acc;
-      // }, _scaleX.barwidth);
       const padding = this.parentNode.padding();
       //const rangeWidth = Math.abs((_scaleX.range[1] + padding.right) - (_scaleX.range[0] - padding.left)) - (_margins.left + _margins.right);
       const rangeWidth = Math.abs((_scaleX.range[1] - _scaleX.range[0]) - (_margins.left+_margins.right));
@@ -135,9 +120,12 @@ function chrtColumns() {
         const y = _scaleY(d[this._stacked ? `stacked_${this.fields.y}` : this.fields.y]);
         // const y0 = _scaleY(0);
         let y0 = !isNull(d[this.fields.y0]) ? _scaleY(d[this.fields.y0]) : null;
+
         if(isNull(y0)) {
-          y0 = _scaleY.isLog() ? (_scaleY.range[0] - _margins.bottom) : _scaleY(0);
-          // y0 = _scaleY.isLog() ? (_scaleY.range[0] - _margins.bottom) : _scaleY(_scaleY.domain[0]);
+          y0 = _scaleY.isLog() ? (_scaleY.range[0] - _margins.bottom) : _scaleY(_scaleY.domain[0] || 0);
+          if((_scaleY.domain[0] || 0) * (_scaleY.domain[1] || 0) < 0) {
+            y0 = _scaleY.isLog() ? (_scaleY.range[0] - _margins.bottom) : _scaleY(0);
+          }
         }
         // console.log('--->', d, y,'>',y0,'domain',_scaleY.domain)
         // console.log('x',x)
