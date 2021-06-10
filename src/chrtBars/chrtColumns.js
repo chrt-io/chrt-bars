@@ -1,11 +1,13 @@
 import { isNull, isInfinity } from '~/helpers';
 import { createSVG as create } from '~/layout';
-import { lineWidth, lineColor, fill, width } from './lib';
+import { lineWidth, lineColor, fill, width, fillOpacity, strokeOpacity } from './lib';
 import chrtGeneric from 'chrt-object';
 
 const DEFAULT_STROKE_WIDTH = 0;
 const DEAULT_LINE_COLOR = '#000';
 const DEAULT_FILL_COLOR = '#ddd';
+const DEFAULT_FILL_OPACITY = 1;
+const DEFAULT_STROKE_OPACITY = 1;
 const DEFAULT_BAR_WIDTH = 3;
 const DEFAULT_BAR_RADIO_WIDTH = 1;
 
@@ -22,7 +24,9 @@ function chrtColumns() {
   this.attr('barRatioWidth', DEFAULT_BAR_RADIO_WIDTH);
   this.attr('stroke', DEAULT_LINE_COLOR);
   this.attr('fill', DEAULT_FILL_COLOR);
+  this.attr('fillOpacity', DEFAULT_FILL_OPACITY);
   this.attr('strokeWidth', DEFAULT_STROKE_WIDTH);
+  this.attr('strokeOpacity', DEFAULT_STROKE_OPACITY);
 
   this._classNames = ['chrt-columns'];
 
@@ -130,14 +134,17 @@ function chrtColumns() {
         // console.log('--->', d, y,'>',y0,'domain',_scaleY.domain)
         // console.log('x',x)
         const _barLength = !isNaN(y) ? Math.max(Math.abs(y - y0), Math.abs(y - y0) - axisLineWidth / 2) : 0;
+        const _barY = y > y0 ? y0 : y;
 
         rect.setAttribute('x', x + _barWidth/2 * (1 - this.attr('barRatioWidth')()));
-        rect.setAttribute('y', y > y0 ? y0 : y);
+        rect.setAttribute('y', isNaN(_barY) || isInfinity(_barY) ? _scaleY.range[0] : _barY);
         rect.setAttribute('width', _barWidth * this.attr('barRatioWidth')());
-        rect.setAttribute('height', _barLength);
+        rect.setAttribute('height', isNaN(_barLength) ? 0 : _barLength);
         rect.setAttribute('fill', this.attr('fill')(d, i, arr));
+        rect.setAttribute('fill-opacity', this.attr('fillOpacity')(d, i, arr));
         rect.setAttribute('stroke', this.attr('stroke')(d, i, arr));
         rect.setAttribute('stroke-width', this.attr('strokeWidth')(d, i, arr));
+        rect.setAttribute('stroke-opacity', this.attr('strokeOpacity')(d, i, arr));
       });
 
       // // // console.log('points', points);
@@ -157,7 +164,10 @@ chrtColumns.prototype = Object.assign(chrtColumns.prototype, {
   width,
   strokeWidth: lineWidth,
   color: lineColor,
+  stroke: lineColor,
   fill,
+  fillOpacity,
+  strokeOpacity,
 });
 
 export default function() {

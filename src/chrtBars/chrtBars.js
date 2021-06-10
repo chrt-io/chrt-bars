@@ -1,11 +1,13 @@
 import { isNull, isInfinity } from '~/helpers';
 import { createSVG as create } from '~/layout';
-import { lineWidth, lineColor, fill, width } from './lib';
+import { lineWidth, lineColor, fill, fillOpacity, strokeOpacity, width } from './lib';
 import chrtGeneric from 'chrt-object';
 
 const DEFAULT_STROKE_WIDTH = 0;
 const DEAULT_LINE_COLOR = '#000';
 const DEAULT_FILL_COLOR = '#ddd';
+const DEFAULT_STROKE_OPACITY = 1;
+const DEFAULT_FILL_OPACITY = 1;
 const DEFAULT_BAR_WIDTH = 3;
 const DEFAULT_BAR_RADIO_WIDTH = 1;
 
@@ -22,7 +24,10 @@ function chrtBars() {
   this.attr('barRatioWidth', DEFAULT_BAR_RADIO_WIDTH);
   this.attr('stroke', DEAULT_LINE_COLOR);
   this.attr('fill', DEAULT_FILL_COLOR);
+  this.attr('fillOpacity', DEFAULT_FILL_OPACITY);
   this.attr('strokeWidth', DEFAULT_STROKE_WIDTH);
+  this.attr('strokeOpacity', DEFAULT_STROKE_OPACITY);
+
 
   this._classNames = ['chrt-bars'];
 
@@ -110,14 +115,16 @@ function chrtBars() {
         x0 = !isNull(d[this.fields.x0]) ? _scaleX(d[this.fields.x0]) : _scaleX(_scaleX.domain[0]);
 
         const _barLength = !isNaN(x) ? Math.max(Math.abs(x - x0), Math.abs(x - x0) - axisLineWidth / 2) : 0;
-        // console.log(x,x0,axisLineWidth)
+
         rect.setAttribute('x', x0);// > x0 ? x0 : x);
         rect.setAttribute('y', y);
         rect.setAttribute('width', _barLength);
         rect.setAttribute('height', _barWidth);
         rect.setAttribute('fill', this.attr('fill')(d, i, arr));
+        rect.setAttribute('fill-opacity', this.attr('fillOpacity')(d, i, arr));
         rect.setAttribute('stroke', this.attr('stroke')(d, i, arr));
         rect.setAttribute('stroke-width', this.attr('strokeWidth')(d, i, arr));
+        rect.setAttribute('stroke-opacity', this.attr('strokeOpacity')(d, i, arr));
       });
 
       // // // console.log('points', points);
@@ -137,7 +144,10 @@ chrtBars.prototype = Object.assign(chrtBars.prototype, {
   width,
   strokeWidth: lineWidth,
   color: lineColor,
+  stroke: lineColor,
   fill,
+  fillOpacity,
+  strokeOpacity
 });
 
 // export default chrtBars;
