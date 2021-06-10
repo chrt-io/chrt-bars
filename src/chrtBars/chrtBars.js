@@ -62,16 +62,23 @@ function chrtBars() {
     // console.log('_scaleY.barwidth', _scaleY.barwidth)
     const _data = this._data.length ? this._data : this.parentNode._data;
     if(!isNull(_data)) {
-      _barWidth = _data.reduce((acc, d, i, arr) => {
-        const next = arr[i + 1];
-        if(!isNull(d) && !isNull(d[this.fields.y]) && !isNull(next) && !isNull(next[this.fields.y])) {
-          const y1 = _scaleY(d[this.fields.y]);
-          const y2 = _scaleY(next[this.fields.y]);
-          const delta = Math.abs(y2 - y1);
-          acc = delta < acc ? delta : acc;
-        }
-        return acc;
-      }, Math.abs(_scaleY.barwidth));
+      const padding = this.parentNode.padding();
+      const rangeWidth = Math.abs((_scaleY.range[1] - _scaleY.range[0])) - (_margins.top+_margins.bottom);
+      console.log('RANGE 1 - 0',(_scaleY.range[1] - _scaleY.range[0]));
+      console.log('_margins', _margins)
+      console.log('rangeWidth', rangeWidth)
+      _barWidth = rangeWidth / ((_data.length - (_scaleY.transformation === 'ordinal' ? 0 : 1)) || 1);
+
+      // _barWidth = _data.reduce((acc, d, i, arr) => {
+      //   const next = arr[i + 1];
+      //   if(!isNull(d) && !isNull(d[this.fields.y]) && !isNull(next) && !isNull(next[this.fields.y])) {
+      //     const y1 = _scaleY(d[this.fields.y]);
+      //     const y2 = _scaleY(next[this.fields.y]);
+      //     const delta = Math.abs(y2 - y1);
+      //     acc = delta < acc ? delta : acc;
+      //   }
+      //   return acc;
+      // }, Math.abs(_scaleY.barwidth));
       // console.log('_barWidth', _barWidth)
       const flooredBarWidth = Math.floor(_barWidth);
       let barWidth = (flooredBarWidth || _barWidth) || 0;
@@ -83,13 +90,37 @@ function chrtBars() {
 
       const _grouped = this._stacked ? this._stacked._grouped : this._grouped || this._grouped;
       const _groupIndex = this._stacked ? this._stacked._groupIndex : this._groupIndex || this._groupIndex;
-      _barWidth = barWidth / (_grouped) * this.attr('barRatioWidth')();
-      // this.g.setAttribute('transform', `translate(${barWidth / _grouped * _groupIndex + (barWidth/_grouped)/2 - barWidth/2}, 0)`)
-      this.g.setAttribute('transform', `translate(0, ${barWidth / _grouped * _groupIndex + (barWidth/_grouped)/2 - barWidth/2})`)
-      // console.log(barWidth, _grouped, _groupIndex)
+      // _barWidth = barWidth / (_grouped) * this.attr('barRatioWidth')();
+      // this.g.setAttribute('transform', `translate(0, ${barWidth / _grouped * _groupIndex + (barWidth/_grouped)/2 - barWidth/2})`)
+
+      _barWidth = barWidth / (_grouped);
+      const deltaY = barWidth / _grouped * _groupIndex + (barWidth/_grouped)/2 - barWidth/2;
+      this.g.setAttribute('transform', `translate(0, ${deltaY})`)
+      console.log('_grouped', _grouped)
+      console.log('_groupIndex', _groupIndex)
+      console.log('_barWidth', _barWidth)
+      console.log('DELTA Y', deltaY)
+
 
       const yAxis = this.parentNode.getAxis('y');
       const axisLineWidth = yAxis ? yAxis.width() : 0;
+
+      // redefine padding to accomodate bars withing the chart area
+      if(_data.length) {
+        // console.log('range', _scaleY.range)
+        const w = (_scaleY.range[1] - _scaleY.range[0]) - (_margins.top + _margins.top);
+        const bw = w / _data.length;
+        const deltaY = (_scaleY.range[0] - _barWidth / 2);
+        // console.log(deltaX, '<', padding.left)
+        if(!this.parentNode.originalPadding && _scaleY.transformation !== 'ordinal' && deltaY < padding.bottom) {
+          const padding = this.parentNode.padding();
+          // console.log('DELTAX IS',deltaX,'bw',bw)
+          const newPadding = Object.assign({}, padding, {bottom: bw/2 + padding.bottom, top: bw/2 + padding.top})
+          // console.log('newPadding', newPadding)
+          // this.parentNode.originalPadding = this.parentNode.originalPadding || padding;
+          return this.parentNode.padding(newPadding, true);
+        }
+      }
 
       _data.forEach((d, i, arr) => {
         // const point = points.find(p => )
