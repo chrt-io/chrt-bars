@@ -64,9 +64,7 @@ function chrtBars() {
     if(!isNull(_data)) {
       const padding = this.parentNode.padding();
       const rangeWidth = Math.abs((_scaleY.range[1] - _scaleY.range[0])) - (_margins.top+_margins.bottom);
-      console.log('RANGE 1 - 0',(_scaleY.range[1] - _scaleY.range[0]));
-      console.log('_margins', _margins)
-      console.log('rangeWidth', rangeWidth)
+
       _barWidth = rangeWidth / ((_data.length - (_scaleY.transformation === 'ordinal' ? 0 : 1)) || 1);
 
       // _barWidth = _data.reduce((acc, d, i, arr) => {
@@ -96,11 +94,6 @@ function chrtBars() {
       _barWidth = barWidth / (_grouped);
       const deltaY = barWidth / _grouped * _groupIndex + (barWidth/_grouped)/2 - barWidth/2;
       this.g.setAttribute('transform', `translate(0, ${deltaY})`)
-      console.log('_grouped', _grouped)
-      console.log('_groupIndex', _groupIndex)
-      console.log('_barWidth', _barWidth)
-      console.log('DELTA Y', deltaY)
-
 
       const yAxis = this.parentNode.getAxis('y');
       const axisLineWidth = yAxis ? yAxis.width() : 0;
