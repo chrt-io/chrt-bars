@@ -61,13 +61,10 @@ function chrtColumns() {
     // console.log(_data,this._data,this.parentNode._data)
     if(!isNull(_data)) {
       const padding = this.parentNode.padding();
-      //const rangeWidth = Math.abs((_scaleX.range[1] + padding.right) - (_scaleX.range[0] - padding.left)) - (_margins.left + _margins.right);
-      const rangeWidth = Math.abs((_scaleX.range[1] - _scaleX.range[0]) - (_margins.left+_margins.right));
-      // console.log('rangeWidth', rangeWidth);
-      //_barWidth = Math.abs(_scaleX.range[1] - _scaleX.range[0]) / ((_data.length) || 1);
+
+      const rangeWidth = Math.abs((_scaleX.range[1] - _scaleX.range[0])) - (_margins.left+_margins.right);
       _barWidth = rangeWidth / ((_data.length - (_scaleX.transformation === 'ordinal' ? 0 : 1)) || 1);
-      // console.log('_barWidth', _barWidth)
-      // console.log('_scaleX.barwidth', _scaleX.barwidth)
+
       const flooredBarWidth = Math.floor(_barWidth);
       let barWidth = (flooredBarWidth || _barWidth) || 0;
       if(isNaN(barWidth) || isInfinity(barWidth)) {
@@ -87,6 +84,8 @@ function chrtColumns() {
       const axisLineWidth = xAxis ? xAxis.width() : 0;
       // console.log('BARWIDTH', _barWidth, this.attr('barRatioWidth')())
       // console.log('_scaleX.barwidth', _scaleX.barwidth)
+
+      // redefine padding to accomodate bars withing the chart area
       if(_data.length) {
         // console.log('range', _scaleX.range)
 
