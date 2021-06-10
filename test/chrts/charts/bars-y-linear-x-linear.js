@@ -1,32 +1,12 @@
 import * as chrt from 'chrt';
 import chrtBars from '~/chrtBars/chrtBars'
 
-const data = [
-  {
-    y: 'a',
-    x: 10
-  },
-  {
-    y: 'b',
-    x: 14
-  },
-  {
-    y: 'c',
-    x: 14
-  },
-  {
-    y: 'd',
-    x: 22
-  }
-];
+const data = new Array(100).fill(1).map((d,i) => ({x: i, y: i}));
 
 export default async function(container) {
   return chrt.Chrt()
     .node(container)
     .size(600, 200)
-    .y({scale:'ordinal'})
-    .x({domain:[0,null], scale:'linear'})
-    .margins({top:0,bottom:0})
     .add(chrt.xAxis())
     .add(chrt.yAxis())
     .add(
@@ -36,9 +16,9 @@ export default async function(container) {
           y: d.y,
         }))
         .width(1)
-        .stroke('#333')
-        .strokeWidth(2)
-        .strokeOpacity(0.8)
+        .stroke('#fff')
+        .strokeWidth(0.5)
+        .strokeOpacity(1)
         .fill('#ff6600')
         .fillOpacity(0.5)
     );

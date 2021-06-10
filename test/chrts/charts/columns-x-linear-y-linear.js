@@ -1,33 +1,13 @@
 import * as chrt from 'chrt';
 import chrtColumns from '~/chrtBars/chrtColumns'
 
-const data = [
-  {
-    x: 'a',
-    y: 10
-  },
-  {
-    x: 'b',
-    y: 14
-  },
-  {
-    x: 'c',
-    y: 14
-  },
-  {
-    x: 'd',
-    y: 22
-  }
-];
+const data = new Array(100).fill(1).map((d,i) => ({x: i, y: i}));
 
 export default async function(container) {
   return chrt.Chrt()
     .node(container)
     .size(600, 200)
-    .x({scale:'ordinal'})
-    .y({scale:'linear'})
-    // .y({domain:[1,10000], scale:'log'})
-    .add(chrt.xAxis())
+    .add(chrt.xAxis(10))
     .add(chrt.yAxis())
     .add(
       chrtColumns()
