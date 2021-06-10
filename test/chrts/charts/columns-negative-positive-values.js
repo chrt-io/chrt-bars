@@ -4,7 +4,7 @@ import chrtColumns from '~/chrtBars/chrtColumns'
 const data = [
   {
     x: 'a',
-    y: 10
+    y: -10
   },
   {
     x: 'b',
@@ -12,7 +12,7 @@ const data = [
   },
   {
     x: 'c',
-    y: 14
+    y: -14
   },
   {
     x: 'd',
@@ -25,9 +25,9 @@ export default async function(container) {
     .node(container)
     .size(600, 200)
     .x({scale:'ordinal'})
-    .y({scale:'linear'})
+    .y({domain:[-10,10],scale:'linear'})
     // .y({domain:[1,10000], scale:'log'})
-    .add(chrt.xAxis())
+    .add(chrt.xAxis().zero(0))
     .add(chrt.yAxis())
     .add(
       chrtColumns()
@@ -36,5 +36,6 @@ export default async function(container) {
           y: d.y,
         }))
         .width(0.5)
+        
     );
 }
