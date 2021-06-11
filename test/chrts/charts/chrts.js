@@ -5,3 +5,8 @@ export { default as barsYOrdinalXLinear } from './bars-y-ordinal-x-linear.js';
 export { default as barsYLinearXLinear } from './bars-y-linear-x-linear.js';
 export { default as stackedBarsYOrdinalXLinear } from './stacked-bars-y-ordinal-x-linear.js';
 export { default as columnsNegativePositiveValues } from './columns-negative-positive-values.js';
+export { default as barsNegativePositiveValues } from './bars-negative-positive-values.js';
+export { default as dataAsSimpleArrayOfNumbers } from './data-as-simple-array-of-numbers.js';
+export { default as dataAsSimpleArrayOfObjects } from './data-as-simple-array-of-objects.js';
+export { default as dataAsSimpleArrayOfNumbersToChrtBars } from './data-as-simple-array-of-numbers-chrtBars.js';
+export { default as dataAsSimpleArrayOfObjectsToChrtBars } from './data-as-simple-array-of-objects-chrtBars.js';

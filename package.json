@@ -37,7 +37,7 @@
   },
   "homepage": "chrt.io",
   "dependencies": {
-    "chrt-object": "0.0.2"
+    "chrt-object": "0.0.4"
   },
   "devDependencies": {
     "@babel/core": "^7.14.5",
@@ -50,7 +50,7 @@
     "babel-plugin-root-import": "^6.6.0",
     "babelify": "^10.0.0",
     "budo": "^11.6.4",
-    "chrt": "0.0.64",
+    "chrt": "0.0.68",
     "eslint": "^7.28.0",
     "husky": "^4.3.0",
     "jest": "^27.0.4",
