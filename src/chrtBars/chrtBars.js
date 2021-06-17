@@ -156,7 +156,7 @@ function chrtBars() {
 
     this.objects.forEach((obj) => obj.draw());
 
-    return this.parentNode;
+    return this;
   };
 }
 
