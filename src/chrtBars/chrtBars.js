@@ -133,14 +133,21 @@ function chrtBars() {
         // const y0 = _scaleY(0);
         let x0 = !isNull(d[this.fields.x0]) ? (_scaleX.isLog() ? _scaleX.range[0] + _margins.left : _scaleX(d[this.fields.x0])) : null;
         if(isNull(x0)) {
-          x0 = _scaleX.isLog() ? (_scaleX.range[0] + _margins.left) : _scaleX(0);
+          // x0 = _scaleX.isLog() ? (_scaleX.range[0] + _margins.left) : _scaleX(0);
+
+          x0 = _scaleX.isLog() ? (_scaleX.range[0] - _margins.left) : _scaleX(_scaleX.domain[0] || 0);
+          if((_scaleX.domain[0] || 0) * (_scaleX.domain[1] || 0) < 0) {
+            x0 = _scaleX.isLog() ? (_scaleX.range[0] - _margins.left) : _scaleX(0);
+          }
         }
 
-        x0 = !isNull(d[this.fields.x0]) ? _scaleX(d[this.fields.x0]) : _scaleX(_scaleX.domain[0]);
+        // x0 = !isNull(d[this.fields.x0]) ? _scaleX(d[this.fields.x0]) : _scaleX(_scaleX.domain[0]);
 
         const _barLength = !isNaN(x) ? Math.max(Math.abs(x - x0), Math.abs(x - x0) - axisLineWidth / 2) : 0;
+        const _barX = x > x0 ? x0 : x;
 
-        rect.setAttribute('x', x0);// > x0 ? x0 : x);
+        // rect.setAttribute('x', x0);
+        rect.setAttribute('x', isNaN(_barX) || isInfinity(_barX) ? _scaleX.range[0] : _barX);
         rect.setAttribute('y', y);
         rect.setAttribute('width', _barLength);
         rect.setAttribute('height', _barWidth);
