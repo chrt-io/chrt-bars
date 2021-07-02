@@ -1,6 +1,6 @@
 import * as chrt from 'chrt';
 import chrtBars from '~/chrtBars/chrtBars'
-
+// import { yAxis, xAxis } from 'chrt-axis';
 const data = [
   {
     x: 'a',
@@ -25,10 +25,6 @@ export default async function(container) {
     .node(container)
     .size(600, 200)
     .y({scale:'ordinal'})
-    .x({domain:[-20,20],scale:'linear'})
-    // .y({domain:[1,10000], scale:'log'})
-    .add(chrt.xAxis())
-    .add(chrt.yAxis().zero(0))
     .add(
       chrtBars()
         .data(data, d => ({
@@ -37,5 +33,7 @@ export default async function(container) {
         }))
         .width(0.5)
 
-    );
+    )
+    .add(chrt.xAxis())
+    .add(chrt.yAxis().zero(0))
 }

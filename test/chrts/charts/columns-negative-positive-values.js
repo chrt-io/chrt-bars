@@ -25,7 +25,7 @@ export default async function(container) {
     .node(container)
     .size(600, 200)
     .x({scale:'ordinal'})
-    .y({domain:[-10,10],scale:'linear'})
+    .y({domain:[-15,15],scale:'linear'})
     // .y({domain:[1,10000], scale:'log'})
     .add(chrt.xAxis().zero(0))
     .add(chrt.yAxis())
@@ -36,6 +36,6 @@ export default async function(container) {
           y: d.y,
         }))
         .width(0.5)
-        
+
     );
 }
