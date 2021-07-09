@@ -21,6 +21,6 @@ export default async function(container) {
         .inset(2)
     );
 
-  console.log(chart)
+  // console.log(chart)
   return chart
 }

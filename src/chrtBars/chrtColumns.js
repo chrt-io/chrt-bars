@@ -124,6 +124,7 @@ function chrtColumns() {
       this.g.setAttribute('transform', `translate(${deltaX}, 0)`)
 
       const xAxis = this.parentNode.getAxis('x');
+      // console.log(this.parentNode, xAxis.width())
       const axisLineWidth = xAxis ? xAxis.width()() : 0;
       // console.log('axisLineWidth', axisLineWidth(), xAxis)
       // console.log('BARWIDTH', _barWidth, this.attr('barRatioWidth')())
