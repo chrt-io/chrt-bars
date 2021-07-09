@@ -1,15 +1,14 @@
 import * as chrt from 'chrt';
 import chrtColumns from '~/chrtBars/chrtColumns'
 
-const data = new Array(50).fill(1).map((d,i) => ({x: i, y: i})).filter((d,i) => i < 35 || i > 40);
-// const data = new Array(2).fill(1).map((d,i) => ({x: i, y: i}));
+const data = new Array(50).fill(1).map((d,i) => ({x: new Date(2021,0,i), y: i})).filter((d,i) => i < 25 || i > 30);
 
 export default async function(container) {
   return chrt.Chrt()
     .node(container)
     .size(600, 200)
-    //.x({domain:[0,1]})
-    .add(chrt.xAxis().format(d => d.toFixed(2)))
+    .x({scale:'time'})
+    .add(chrt.xAxis().interval('week').format(d => new Intl.DateTimeFormat('en-US', {day: 'numeric'}).format(d)))
     .add(chrt.yAxis())
     .add(
       chrtColumns()

@@ -1,13 +1,13 @@
 import * as chrt from 'chrt';
 import chrtBars from '~/chrtBars/chrtBars'
 
-const data = new Array(100).fill(1).map((d,i) => ({x: i, y: i}));
+const data = new Array(3).fill(1).map((d,i) => ({x: i || 4, y: i}));
 
 export default async function(container) {
   return chrt.Chrt()
     .node(container)
     .size(600, 200)
-    .add(chrt.xAxis())
+    .add(chrt.xAxis(3))
     .add(chrt.yAxis())
     .add(
       chrtBars()

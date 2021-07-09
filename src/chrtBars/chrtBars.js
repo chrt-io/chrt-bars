@@ -1,6 +1,6 @@
 import { isNull, isInfinity } from '~/helpers';
 import { createSVG as create } from '~/layout';
-import { lineWidth, lineColor, fill, fillOpacity, strokeOpacity, width } from './lib';
+import { lineWidth, lineColor, fill, fillOpacity, strokeOpacity, width, inset } from './lib';
 import chrtGeneric from 'chrt-object';
 
 const DEFAULT_STROKE_WIDTH = 0;
@@ -10,6 +10,10 @@ const DEFAULT_STROKE_OPACITY = 1;
 const DEFAULT_FILL_OPACITY = 1;
 const DEFAULT_BAR_WIDTH = 3;
 const DEFAULT_BAR_RADIO_WIDTH = 1;
+const DEFAULT_BAR_INSET = 1;
+const ROUND = false;
+
+const MIN_BAR_SIZE = 1;
 
 function chrtBars() {
   chrtGeneric.call(this);
@@ -22,6 +26,7 @@ function chrtBars() {
   //this.strokeWidth = DEFAULT_STROKE_WIDTH;
   let _barWidth = DEFAULT_BAR_WIDTH;
   this.attr('barRatioWidth', DEFAULT_BAR_RADIO_WIDTH);
+  this.attr('inset', DEFAULT_BAR_INSET);
   this.attr('stroke', DEAULT_LINE_COLOR);
   this.attr('fill', DEAULT_FILL_COLOR);
   this.attr('fillOpacity', DEFAULT_FILL_OPACITY);
@@ -65,23 +70,43 @@ function chrtBars() {
       const padding = this.parentNode.padding();
       const rangeWidth = Math.abs((_scaleY.range[1] - _scaleY.range[0])) - (_margins.top+_margins.bottom);
 
-      _barWidth = rangeWidth / ((_data.length - (_scaleY.transformation === 'ordinal' ? 0 : 1)) || 1);
+      // _barWidth = rangeWidth / ((_data.length - (_scaleY.transformation === 'ordinal' ? 0 : 1)) || 1);
+      // _barWidth = rangeWidth / ((_scaleY.ticks().filter(d => _scaleY.isLog() ? !d.isMinor : true).length - (_scaleY.transformation === 'ordinal' ? 0 : 1)) || 1);
 
-      // _barWidth = _data.reduce((acc, d, i, arr) => {
-      //   const next = arr[i + 1];
-      //   if(!isNull(d) && !isNull(d[this.fields.y]) && !isNull(next) && !isNull(next[this.fields.y])) {
-      //     const y1 = _scaleY(d[this.fields.y]);
-      //     const y2 = _scaleY(next[this.fields.y]);
-      //     const delta = Math.abs(y2 - y1);
-      //     acc = delta < acc ? delta : acc;
-      //   }
-      //   return acc;
-      // }, Math.abs(_scaleY.barwidth));
-      // console.log('_barWidth', _barWidth)
+      if(_scaleY.transformation === 'ordinal') {
+        _barWidth = rangeWidth / ((_data.length - (_scaleX.transformation === 'ordinal' ? 0 : 1)) || 1);
+      } else {
+        // const k = Math.ceil(Math.log2(_data.length) + 1);
+        // console.log('Sturges', k)
+        //
+        // console.log('_data.length', _data.length)
+        // console.log('_scaleY.ticks().length', _scaleY.ticks().length)
+        // console.log(_scaleX)
+
+        const n = Math.max(_scaleY.ticks().length, _data.length);
+        _barWidth = rangeWidth / ((_scaleY.ticks(n).filter(d => _scaleY.isLog() ? !d.isMinor : true).length - (_scaleY.transformation === 'ordinal' ? 0 : 1)) || 1);
+      }
+
+      const getBarModifier = () => {
+        const barWidthModifier = _data.reduce((overlap,d,i,arr) => {
+          if(d && arr[i + 1]) {
+            const field0 = _scaleY(d[this.fields.y]);
+            const field1 = _scaleY(arr[i + 1][this.fields.y]);
+            overlap = Math.abs(field1 - field0) / _barWidth;
+          }
+          return Math.min(1, overlap);
+        }, 1)
+
+        // console.log('barWidthModifier', barWidthModifier)
+        return barWidthModifier;
+      }
+
+      _barWidth = _barWidth * getBarModifier.call(this);
+
       const flooredBarWidth = Math.floor(_barWidth);
-      let barWidth = (flooredBarWidth || _barWidth) || 0;
+      let barWidth = (ROUND ? flooredBarWidth : _barWidth) || MIN_BAR_SIZE;
       if(isNaN(barWidth) || isInfinity(barWidth)) {
-        barWidth = 1;
+        barWidth = MIN_BAR_SIZE;
       }
       barWidth = barWidth * (this._group ? this._group.width() : 1);
       //console.log('GROUP WIDTH', this._group ? this._group.width() : 1)
@@ -92,22 +117,27 @@ function chrtBars() {
       // this.g.setAttribute('transform', `translate(0, ${barWidth / _grouped * _groupIndex + (barWidth/_grouped)/2 - barWidth/2})`)
 
       _barWidth = barWidth / (_grouped);
+      _barWidth = Math.max(_barWidth - (this.attr('inset')()), MIN_BAR_SIZE);
+
       const deltaY = barWidth / _grouped * _groupIndex + (barWidth/_grouped)/2 - barWidth/2;
       this.g.setAttribute('transform', `translate(0, ${deltaY})`)
 
       const yAxis = this.parentNode.getAxis('y');
-      const axisLineWidth = yAxis ? yAxis.width() : 0;
-
+      const axisLineWidth = yAxis ? yAxis.width()() : 0;
+      //console.log(_scaleY)
       // redefine padding to accomodate bars withing the chart area
-      if(_data.length) {
+      //console.log('_data.length', _data.length, '_scaleY.barwidth', _scaleY.barwidth)
+      if(_data.length && _scaleY.barwidth > 0) {
         // console.log('range', _scaleY.range)
-        const w = (_scaleY.range[1] - _scaleY.range[0]) - (_margins.top + _margins.top);
-        const bw = w / _data.length;
-        const deltaY = (_scaleY.range[0] - _barWidth / 2);
-        // console.log(deltaX, '<', padding.left)
-        if(!this.parentNode.originalPadding && _scaleY.transformation !== 'ordinal' && deltaY < padding.bottom) {
+        const w = Math.abs(_scaleY.range[1] - _scaleY.range[0]) - (_margins.top + _margins.bottom);
+        // const bw = w / _data.length;
+        const bw = _scaleY.transformation === 'ordinal' ? w / _data.length : w / _scaleY.ticks().length;
+        const deltaY = (_scaleY.range[1] - _barWidth / 2);
+        // console.log(deltaY, '<', padding.top)
+        // if(!this.parentNode.originalPadding && _scaleY.transformation !== 'ordinal' && deltaY < padding.bottom) {
+        if(!this.parentNode.originalPadding && _scaleY.transformation !== 'ordinal' && (deltaY < (padding?.bottom ?? 0) || (deltaY > (padding?.top ?? 0)))) {
           const padding = this.parentNode.padding();
-          // console.log('DELTAX IS',deltaX,'bw',bw)
+          // console.log('DELTAY IS',deltaY,'bw',bw)
           const newPadding = Object.assign({}, padding, {bottom: bw/2 + padding.bottom, top: bw/2 + padding.top})
           // console.log('newPadding', newPadding)
           // this.parentNode.originalPadding = this.parentNode.originalPadding || padding;
@@ -173,6 +203,7 @@ chrtBars.parent = chrtGeneric.prototype;
 
 chrtBars.prototype = Object.assign(chrtBars.prototype, {
   width,
+  inset,
   strokeWidth: lineWidth,
   color: lineColor,
   stroke: lineColor,
