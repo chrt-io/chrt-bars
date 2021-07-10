@@ -37,7 +37,7 @@ export default async function(container) {
         }))
         .width(1)
         .stroke('#333')
-        .strokeWidth(2)
+        .strokeWidth(1)
         .strokeOpacity(0.8)
         .fill('#ff6600')
         .fillOpacity(0.5)

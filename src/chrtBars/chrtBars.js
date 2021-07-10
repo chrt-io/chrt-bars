@@ -176,11 +176,12 @@ function chrtBars() {
         const _barLength = !isNaN(x) ? Math.max(Math.abs(x - x0), Math.abs(x - x0) - axisLineWidth / 2) : 0;
         const _barX = x > x0 ? x0 : x;
 
-        // rect.setAttribute('x', x0);
-        rect.setAttribute('x', isNaN(_barX) || isInfinity(_barX) ? _scaleX.range[0] : _barX);
-        rect.setAttribute('y', y);
-        rect.setAttribute('width', _barLength);
-        rect.setAttribute('height', _barWidth);
+        const strokeWidth = this.attr('strokeWidth')(d, i, arr);
+        // console.log('strokeWidth',strokeWidth)
+        rect.setAttribute('x', (isNaN(_barX) || isInfinity(_barX) ? _scaleX.range[0] : _barX) + strokeWidth * 0.5);
+        rect.setAttribute('y', y + strokeWidth * 0.5);
+        rect.setAttribute('width', Math.max(0, _barLength - strokeWidth));
+        rect.setAttribute('height', Math.max(0,_barWidth - strokeWidth));
         rect.setAttribute('fill', this.attr('fill')(d, i, arr));
         rect.setAttribute('fill-opacity', this.attr('fillOpacity')(d, i, arr));
         rect.setAttribute('stroke', this.attr('stroke')(d, i, arr));

@@ -12,3 +12,4 @@ export { default as dataAsSimpleArrayOfNumbers } from './data-as-simple-array-of
 export { default as dataAsSimpleArrayOfObjects } from './data-as-simple-array-of-objects.js';
 export { default as dataAsSimpleArrayOfNumbersToChrtBars } from './data-as-simple-array-of-numbers-chrtBars.js';
 export { default as dataAsSimpleArrayOfObjectsToChrtBars } from './data-as-simple-array-of-objects-chrtBars.js';
+export { default as columnsXLinearYLinearFuncInMethods } from './columns-x-linear-y-linear-func-in-methods.js';

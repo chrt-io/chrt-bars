@@ -36,5 +36,6 @@ export default async function(container) {
           y: d.y,
         }))
         .width(1)
+        .strokeWidth(10)
     );
 }

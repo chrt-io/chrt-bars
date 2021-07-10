@@ -124,7 +124,8 @@ function chrtColumns() {
       this.g.setAttribute('transform', `translate(${deltaX}, 0)`)
 
       const xAxis = this.parentNode.getAxis('x');
-      // console.log(this.parentNode, xAxis.width())
+      // console.log('xAxis.width()', xAxis.width(), xAxis.width()())
+      // console.log('xAxis.width()', xAxis.width(), xAxis.width()())
       const axisLineWidth = xAxis ? xAxis.width()() : 0;
       // console.log('axisLineWidth', axisLineWidth(), xAxis)
       // console.log('BARWIDTH', _barWidth, this.attr('barRatioWidth')())
@@ -191,15 +192,19 @@ function chrtColumns() {
         const _barLength = !isNaN(y) ? Math.max(Math.abs(y - y0), Math.abs(y - y0) - axisLineWidth / 2) : 0;
         const _barY = y > y0 ? y0 : y;
         //console.log(i,d,_barLength,axisLineWidth
-        rect.setAttribute('x', x + _barWidth/2 * (1 - this.attr('barRatioWidth')()));
-        rect.setAttribute('y', isNaN(_barY) || isInfinity(_barY) ? _scaleY.range[0] : _barY);
-        rect.setAttribute('width', _barWidth * this.attr('barRatioWidth')());
-        rect.setAttribute('height', isNaN(_barLength) ? 0 : _barLength);
+        // _barWidth = _barWidth - this.attr('strokeWidth')(d, i, arr) * 2;
+        const strokeWidth = this.attr('strokeWidth')(d, i, arr);
+        // console.log(_barWidth,  strokeWidth * 2)
+        rect.setAttribute('x', x + _barWidth/2 * (1 - this.attr('barRatioWidth')()) + strokeWidth * 0.5);
+        rect.setAttribute('y', (isNaN(_barY) || isInfinity(_barY) ? _scaleY.range[0] : _barY) + strokeWidth * 0.5);
+        rect.setAttribute('width', Math.max(0, _barWidth * this.attr('barRatioWidth')() - strokeWidth));
+        rect.setAttribute('height', Math.max(0, isNaN(_barLength) ? 0 : (_barLength - strokeWidth)));
         rect.setAttribute('fill', this.attr('fill')(d, i, arr));
         rect.setAttribute('fill-opacity', this.attr('fillOpacity')(d, i, arr));
         rect.setAttribute('stroke', this.attr('stroke')(d, i, arr));
         rect.setAttribute('stroke-width', this.attr('strokeWidth')(d, i, arr));
         rect.setAttribute('stroke-opacity', this.attr('strokeOpacity')(d, i, arr));
+        // rect.setAttribute('stroke-linecap', 'square');
       });
 
       // // // console.log('points', points);

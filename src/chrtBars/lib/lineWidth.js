@@ -1,3 +1,9 @@
 export default function lineWidth(value) {
-  return this.attr('strokeWidth', value, (value) => Math.max(0, value));
+  return this.attr('strokeWidth', value);
+  // , (value) => {
+  //   console.log('strokeWidth', value)
+  //   console.log(value())
+  //   return value
+  //   //return Math.max(0, value)
+  // });
 }

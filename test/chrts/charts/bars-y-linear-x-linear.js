@@ -16,8 +16,8 @@ export default async function(container) {
           y: d.y,
         }))
         .width(1)
-        .stroke('#fff')
-        .strokeWidth(0.5)
+        .stroke('#000')
+        .strokeWidth(3)
         .strokeOpacity(1)
         .fill('#ff6600')
         .fillOpacity(0.5)
