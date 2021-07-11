@@ -10,6 +10,8 @@ export { default as columnsNegativePositiveValues } from './columns-negative-pos
 export { default as barsNegativePositiveValues } from './bars-negative-positive-values.js';
 export { default as dataAsSimpleArrayOfNumbers } from './data-as-simple-array-of-numbers.js';
 export { default as dataAsSimpleArrayOfObjects } from './data-as-simple-array-of-objects.js';
-export { default as dataAsSimpleArrayOfNumbersToChrtBars } from './data-as-simple-array-of-numbers-chrtBars.js';
-export { default as dataAsSimpleArrayOfObjectsToChrtBars } from './data-as-simple-array-of-objects-chrtBars.js';
+export { default as dataAsSimpleArrayOfNumbersToChrtColumns } from './data-as-simple-array-of-numbers-chrtBars.js';
+export { default as dataAsSimpleArrayOfObjectsToChrtColumns } from './data-as-simple-array-of-objects-chrtBars.js';
 export { default as columnsXLinearYLinearFuncInMethods } from './columns-x-linear-y-linear-func-in-methods.js';
+export { default as columnsXLinearYLinearWidthBinWidth } from './columns-x-linear-y-linear-binwidth.js';
+export { default as barsXLinearYLinearWidthBinWidth } from './bars-y-linear-x-linear-binwidth.js';

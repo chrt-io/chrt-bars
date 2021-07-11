@@ -1,6 +1,6 @@
 import { isNull, isInfinity } from '~/helpers';
 import { createSVG as create } from '~/layout';
-import { lineWidth, lineColor, fill, fillOpacity, strokeOpacity, width, inset } from './lib';
+import { lineWidth, lineColor, fill, fillOpacity, strokeOpacity, width, inset, binwidth } from './lib';
 import {
   DEFAULT_STROKE_WIDTH,
   DEAULT_LINE_COLOR,
@@ -92,6 +92,10 @@ function chrtBars() {
 
       _barWidth = _barWidth * getBarModifier.call(this);
 
+      if(typeof this.binwidth()() !== 'undefined') {
+        _barWidth = Math.abs(_scaleY(_scaleY.domain[0] + this.binwidth()()) - _scaleY(_scaleY.domain[0]));
+      }
+
       const flooredBarWidth = Math.floor(_barWidth);
       let barWidth = (ROUND ? flooredBarWidth : _barWidth) || MIN_BAR_SIZE;
       if(isNaN(barWidth) || isInfinity(barWidth)) {
@@ -180,7 +184,8 @@ chrtBars.prototype = Object.assign(chrtBars.prototype, {
   stroke: lineColor,
   fill,
   fillOpacity,
-  strokeOpacity
+  strokeOpacity,
+  binwidth
 });
 
 export default function() {

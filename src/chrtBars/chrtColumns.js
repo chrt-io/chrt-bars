@@ -1,6 +1,6 @@
 import { isNull, isInfinity } from '~/helpers';
 import { createSVG as create } from '~/layout';
-import { lineWidth, lineColor, fill, width, fillOpacity, strokeOpacity, inset } from './lib';
+import { lineWidth, lineColor, fill, width, fillOpacity, strokeOpacity, inset, binwidth } from './lib';
 import {
   DEFAULT_STROKE_WIDTH,
   DEAULT_LINE_COLOR,
@@ -31,6 +31,7 @@ function chrtColumns() {
   this.attr('fillOpacity', DEFAULT_FILL_OPACITY);
   this.attr('strokeWidth', DEFAULT_STROKE_WIDTH);
   this.attr('strokeOpacity', DEFAULT_STROKE_OPACITY);
+  // this.attr('binwidth', null);
 
   this._classNames = ['chrt-columns'];
 
@@ -88,6 +89,10 @@ function chrtColumns() {
       }
 
       _barWidth = _barWidth * getBarModifier.call(this);
+
+      if(typeof this.binwidth()() !== 'undefined') {
+        _barWidth = Math.abs(_scaleX(_scaleX.domain[0] + this.binwidth()()) - _scaleX(_scaleX.domain[0]));
+      }
 
       const flooredBarWidth = Math.floor(_barWidth);
       let barWidth = (ROUND ? flooredBarWidth : _barWidth) || MIN_BAR_SIZE;
@@ -180,6 +185,7 @@ chrtColumns.prototype = Object.assign(chrtColumns.prototype, {
   fill,
   fillOpacity,
   strokeOpacity,
+  binwidth,
 });
 
 export default function() {

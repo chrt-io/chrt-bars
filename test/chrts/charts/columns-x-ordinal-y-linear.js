@@ -21,7 +21,7 @@ const data = [
 ];
 
 export default async function(container) {
-  return chrt.Chrt()
+  const chart = chrt.Chrt()
     .node(container)
     .size(600, 200)
     .x({scale:'ordinal'})
@@ -38,4 +38,6 @@ export default async function(container) {
         .width(1)
         .strokeWidth(10)
     );
+    
+  return chart;
 }
