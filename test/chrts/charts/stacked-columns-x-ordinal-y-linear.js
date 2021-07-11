@@ -37,7 +37,7 @@ export default async function(container) {
               x: d.x,
               y: d.y,
             }))
-            .width(0.5)
+            .width(1)
             .fill('#f00')
         )
         .add(

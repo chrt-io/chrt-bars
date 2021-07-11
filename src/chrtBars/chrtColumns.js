@@ -90,10 +90,6 @@ function chrtColumns() {
 
       _barWidth = _barWidth * getBarModifier.call(this);
 
-      if(typeof this.binwidth()() !== 'undefined') {
-        _barWidth = Math.abs(_scaleX(_scaleX.domain[0] + this.binwidth()()) - _scaleX(_scaleX.domain[0]));
-      }
-
       const flooredBarWidth = Math.floor(_barWidth);
       let barWidth = (ROUND ? flooredBarWidth : _barWidth) || MIN_BAR_SIZE;
       if(isNaN(barWidth) || isInfinity(barWidth)) {
@@ -106,7 +102,6 @@ function chrtColumns() {
       const _groupIndex = this._stacked ? this._stacked._groupIndex : this._groupIndex || this._groupIndex;
 
       _barWidth = barWidth / (_grouped);
-      _barWidth = Math.max(_barWidth - (this.attr('inset')()), MIN_BAR_SIZE);
 
       const deltaX = barWidth / _grouped * _groupIndex + (barWidth/_grouped)/2 - barWidth/2;
       this.g.setAttribute('transform', `translate(${deltaX}, 0)`)
@@ -135,7 +130,7 @@ function chrtColumns() {
           rect.setAttribute('shape-rendering', 'crispEdges');
           this.g.appendChild(rect);
         }
-        const x = _scaleX(d[this.fields.x]) - _barWidth / 2;
+        const x = _scaleX(d[this.fields.x]); // - _barWidth / 2;
         if(isNaN(x)) {
           return;
         }
@@ -152,10 +147,16 @@ function chrtColumns() {
         const _barLength = !isNaN(y) ? Math.max(Math.abs(y - y0), Math.abs(y - y0) - axisLineWidth / 2) : 0;
         const _barY = y > y0 ? y0 : y;
 
+        if(typeof this.binwidth()() !== 'undefined') {
+          _barWidth = Math.abs(_scaleX(d[this.fields.x] + this.binwidth()(d, i, arr)) - _scaleX(d[this.fields.x]));
+        }
+
+        // _barWidth = Math.max(_barWidth - (this.attr('inset')()), MIN_BAR_SIZE);
+
         const strokeWidth = this.attr('strokeWidth')(d, i, arr);
-        rect.setAttribute('x', x + _barWidth/2 * (1 - this.attr('barRatioWidth')()) + strokeWidth * 0.5);
+        rect.setAttribute('x', (x - _barWidth/2) + _barWidth/2 * (1 - this.attr('barRatioWidth')(d, i, arr)) + strokeWidth * 0.5 + this.attr('inset')(d, i, arr)/2);
         rect.setAttribute('y', (isNaN(_barY) || isInfinity(_barY) ? _scaleY.range[0] : _barY) + strokeWidth * 0.5);
-        rect.setAttribute('width', Math.max(0, _barWidth * this.attr('barRatioWidth')() - strokeWidth));
+        rect.setAttribute('width', Math.max(0, _barWidth * this.attr('barRatioWidth')(d, i, arr) - strokeWidth - this.attr('inset')(d, i, arr)));
         rect.setAttribute('height', Math.max(0, isNaN(_barLength) ? 0 : (_barLength - strokeWidth)));
         rect.setAttribute('fill', this.attr('fill')(d, i, arr));
         rect.setAttribute('fill-opacity', this.attr('fillOpacity')(d, i, arr));

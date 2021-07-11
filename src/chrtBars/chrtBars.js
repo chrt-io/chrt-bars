@@ -92,10 +92,6 @@ function chrtBars() {
 
       _barWidth = _barWidth * getBarModifier.call(this);
 
-      if(typeof this.binwidth()() !== 'undefined') {
-        _barWidth = Math.abs(_scaleY(_scaleY.domain[0] + this.binwidth()()) - _scaleY(_scaleY.domain[0]));
-      }
-
       const flooredBarWidth = Math.floor(_barWidth);
       let barWidth = (ROUND ? flooredBarWidth : _barWidth) || MIN_BAR_SIZE;
       if(isNaN(barWidth) || isInfinity(barWidth)) {
@@ -107,7 +103,7 @@ function chrtBars() {
       const _groupIndex = this._stacked ? this._stacked._groupIndex : this._groupIndex || this._groupIndex;
 
       _barWidth = barWidth / (_grouped);
-      _barWidth = Math.max(_barWidth - (this.attr('inset')()), MIN_BAR_SIZE);
+      // _barWidth = Math.max(_barWidth - (this.attr('inset')()), MIN_BAR_SIZE);
 
       const deltaY = barWidth / _grouped * _groupIndex + (barWidth/_grouped)/2 - barWidth/2;
       this.g.setAttribute('transform', `translate(0, ${deltaY})`)
@@ -125,6 +121,7 @@ function chrtBars() {
         if(!this.parentNode.originalPadding && _scaleY.transformation !== 'ordinal' && (deltaY < (padding?.bottom ?? 0) || (deltaY > (padding?.top ?? 0)))) {
           const padding = this.parentNode.padding();
           const newPadding = Object.assign({}, padding, {bottom: bw/2 + padding.bottom, top: bw/2 + padding.top})
+          // console.log('newPadding', newPadding)
           return this.parentNode.padding(newPadding, true);
         }
       }
@@ -137,7 +134,7 @@ function chrtBars() {
           rect.setAttribute('shape-rendering', 'crispEdges');
           this.g.appendChild(rect);
         }
-        const y = _scaleY(d[this.fields.y]) - _barWidth / 2;
+        const y = _scaleY(d[this.fields.y]); // - _barWidth / 2;
         if(isNaN(y)) {
           return;
         }
@@ -153,11 +150,15 @@ function chrtBars() {
         const _barLength = !isNaN(x) ? Math.max(Math.abs(x - x0), Math.abs(x - x0) - axisLineWidth / 2) : 0;
         const _barX = x > x0 ? x0 : x;
 
+        if(typeof this.binwidth()() !== 'undefined') {
+          _barWidth = Math.abs(_scaleY(d[this.fields.y] + this.binwidth()(d, i, arr)) - _scaleY(d[this.fields.y]));
+        }
+
         const strokeWidth = this.attr('strokeWidth')(d, i, arr);
         rect.setAttribute('x', (isNaN(_barX) || isInfinity(_barX) ? _scaleX.range[0] : _barX) + strokeWidth * 0.5);
-        rect.setAttribute('y', y + strokeWidth * 0.5);
+        rect.setAttribute('y', (y - _barWidth/2) + _barWidth/2 * (1 - this.attr('barRatioWidth')(d, i, arr)) + strokeWidth * 0.5 + this.attr('inset')(d, i, arr) * 0.5); //  + _barWidth/2 * (1 - this.attr('barRatioWidth')()) + strokeWidth * 0.5);
         rect.setAttribute('width', Math.max(0, _barLength - strokeWidth));
-        rect.setAttribute('height', Math.max(0,_barWidth - strokeWidth));
+        rect.setAttribute('height', Math.max(0, _barWidth * this.attr('barRatioWidth')(d, i, arr) - strokeWidth - this.attr('inset')(d, i, arr)));
         rect.setAttribute('fill', this.attr('fill')(d, i, arr));
         rect.setAttribute('fill-opacity', this.attr('fillOpacity')(d, i, arr));
         rect.setAttribute('stroke', this.attr('stroke')(d, i, arr));

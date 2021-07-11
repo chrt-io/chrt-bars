@@ -9,6 +9,7 @@ export default async function(container) {
     .node(container)
     .size(600, 200)
     .x({domain:[0,50]})
+    .padding({top: 20, bottom: 20})
     .add(chrt.xAxis(3))
     .add(chrt.yAxis())
     .add(

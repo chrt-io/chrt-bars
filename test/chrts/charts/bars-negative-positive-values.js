@@ -31,7 +31,7 @@ export default async function(container) {
           x: d.y,
           y: d.x,
         }))
-        .width(0.5)
+        .width(0.75)
 
     )
     .add(chrt.xAxis())
