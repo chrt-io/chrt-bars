@@ -15,3 +15,5 @@ export { default as dataAsSimpleArrayOfObjectsToChrtColumns } from './data-as-si
 export { default as columnsXLinearYLinearFuncInMethods } from './columns-x-linear-y-linear-func-in-methods.js';
 export { default as columnsXLinearYLinearWidthBinWidth } from './columns-x-linear-y-linear-binwidth.js';
 export { default as barsXLinearYLinearWidthBinWidth } from './bars-y-linear-x-linear-binwidth.js';
+export { default as stackedColumnsXOrdinalYLinearNegative } from './stacked-columns-x-ordinal-y-linear-negative.js';
+export { default as stackedBarsXOrdinalYLinearNegative } from './stacked-bars-y-ordinal-x-linear-with-negatives';
