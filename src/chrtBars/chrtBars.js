@@ -154,11 +154,35 @@ function chrtBars() {
           _barWidth = Math.abs(_scaleY(d[this.fields.y] + this.binwidth()(d, i, arr)) - _scaleY(d[this.fields.y]));
         }
 
+
         const strokeWidth = this.attr('strokeWidth')(d, i, arr);
-        rect.setAttribute('x', (isNaN(_barX) || isInfinity(_barX) ? _scaleX.range[0] : _barX) + strokeWidth * 0.5);
-        rect.setAttribute('y', (y - _barWidth/2) + _barWidth/2 * (1 - this.attr('barRatioWidth')(d, i, arr)) + strokeWidth * 0.5 + this.attr('inset')(d, i, arr) * 0.5); //  + _barWidth/2 * (1 - this.attr('barRatioWidth')()) + strokeWidth * 0.5);
-        rect.setAttribute('width', Math.max(0, _barLength - strokeWidth));
-        rect.setAttribute('height', Math.max(0, _barWidth * this.attr('barRatioWidth')(d, i, arr) - strokeWidth - this.attr('inset')(d, i, arr)));
+
+        const anchorPoints = {};
+        anchorPoints.x = (isNaN(_barX) || isInfinity(_barX) ? _scaleX.range[0] : _barX) + strokeWidth * 0.5;
+
+        // console.log('--------->', x,' > ',x0)
+        anchorPoints.directions = {
+          x: x > x0 ? 1 : 0,
+          y: 1,
+        };
+
+        anchorPoints.y = (y - _barWidth/2) + _barWidth/2 * (1 - this.attr('barRatioWidth')(d, i, arr)) + strokeWidth * 0.5 + this.attr('inset')(d, i, arr) * 0.5;
+        anchorPoints.width = Math.max(0, _barLength - strokeWidth);
+        anchorPoints.height = Math.max(0, _barWidth * this.attr('barRatioWidth')(d, i, arr) - strokeWidth - this.attr('inset')(d, i, arr));
+
+        anchorPoints.left = anchorPoints.x;
+        anchorPoints.top = anchorPoints.y;
+        anchorPoints.right = anchorPoints.x + anchorPoints.width;
+        anchorPoints.bottom = anchorPoints.y + anchorPoints.height;
+
+        anchorPoints.relativePosition = [1, 0.5];
+
+        d.anchorPoints = anchorPoints;
+
+        rect.setAttribute('x', anchorPoints.x);
+        rect.setAttribute('y', anchorPoints.y);
+        rect.setAttribute('width', anchorPoints.width);
+        rect.setAttribute('height', anchorPoints.height);
         rect.setAttribute('fill', this.attr('fill')(d, i, arr));
         rect.setAttribute('fill-opacity', this.attr('fillOpacity')(d, i, arr));
         rect.setAttribute('stroke', this.attr('stroke')(d, i, arr));

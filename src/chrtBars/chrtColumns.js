@@ -151,13 +151,38 @@ function chrtColumns() {
           _barWidth = Math.abs(_scaleX(d[this.fields.x] + this.binwidth()(d, i, arr)) - _scaleX(d[this.fields.x]));
         }
 
-        // _barWidth = Math.max(_barWidth - (this.attr('inset')()), MIN_BAR_SIZE);
-
         const strokeWidth = this.attr('strokeWidth')(d, i, arr);
-        rect.setAttribute('x', (x - _barWidth/2) + _barWidth/2 * (1 - this.attr('barRatioWidth')(d, i, arr)) + strokeWidth * 0.5 + this.attr('inset')(d, i, arr)/2);
-        rect.setAttribute('y', (isNaN(_barY) || isInfinity(_barY) ? _scaleY.range[0] : _barY) + strokeWidth * 0.5);
-        rect.setAttribute('width', Math.max(0, _barWidth * this.attr('barRatioWidth')(d, i, arr) - strokeWidth - this.attr('inset')(d, i, arr)));
-        rect.setAttribute('height', Math.max(0, isNaN(_barLength) ? 0 : (_barLength - strokeWidth)));
+
+        const anchorPoints = {};
+
+        anchorPoints.x = (x - _barWidth/2) + _barWidth/2 * (1 - this.attr('barRatioWidth')(d, i, arr)) + strokeWidth * 0.5 + this.attr('inset')(d, i, arr)/2;
+        anchorPoints.y = (isNaN(_barY) || isInfinity(_barY) ? _scaleY.range[0] : _barY) + strokeWidth * 0.5
+
+        anchorPoints.directions = {
+          x: 1,
+          y: y > y0 ? 0 : 1,
+        };
+
+        anchorPoints.width = Math.max(0, _barWidth * this.attr('barRatioWidth')(d, i, arr) - strokeWidth - this.attr('inset')(d, i, arr));
+        anchorPoints.height = Math.max(0, isNaN(_barLength) ? 0 : (_barLength - strokeWidth));
+
+        anchorPoints.left = anchorPoints.x;
+        anchorPoints.right = anchorPoints.x + anchorPoints.width;
+        anchorPoints.top = anchorPoints.y;
+        anchorPoints.bottom = anchorPoints.y - anchorPoints.height;
+
+        anchorPoints.relativePosition = [0.5, 0];
+        anchorPoints.alignment = {
+          horizontal: 'middle',
+          vertical: 'top',
+        }
+
+        d.anchorPoints = anchorPoints;
+
+        rect.setAttribute('x', anchorPoints.x);
+        rect.setAttribute('y', anchorPoints.y);
+        rect.setAttribute('width', anchorPoints.width);
+        rect.setAttribute('height', anchorPoints.height);
         rect.setAttribute('fill', this.attr('fill')(d, i, arr));
         rect.setAttribute('fill-opacity', this.attr('fillOpacity')(d, i, arr));
         rect.setAttribute('stroke', this.attr('stroke')(d, i, arr));
@@ -171,6 +196,7 @@ function chrtColumns() {
 
     return this.parentNode;
   };
+
 }
 
 chrtColumns.prototype = Object.create(chrtGeneric.prototype);
