@@ -1,7 +1,7 @@
 // For a detailed explanation regarding each configuration property, visit:
 // https://jestjs.io/docs/en/configuration.html
 
-module.exports = {
+export default {
   // All imported modules in your tests should be mocked automatically
   // automock: false,
 
@@ -170,6 +170,11 @@ module.exports = {
   // transformIgnorePatterns: [
   //   "/node_modules/"
   // ],
+  transformIgnorePatterns: [
+   'node_modules/(?!(chrt' +
+     // + "|some-folder"
+     ')/)'
+  ],
 
   // An array of regexp pattern strings that are matched against all modules before the module loader will automatically return a mock for them
   // unmockedModulePathPatterns: undefined,
