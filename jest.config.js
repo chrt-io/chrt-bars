@@ -21,7 +21,7 @@ export default {
   // collectCoverageFrom: undefined,
 
   // The directory where Jest should output its coverage files
-  coverageDirectory: "coverage",
+  coverageDirectory: 'coverage',
 
   // An array of regexp pattern strings used to skip coverage collection
   // coveragePathIgnorePatterns: [
@@ -129,7 +129,7 @@ export default {
   // snapshotSerializers: [],
 
   // The test environment that will be used for testing
-  testEnvironment: "jest-environment-jsdom",
+  testEnvironment: 'jest-environment-jsdom',
 
   // Options that will be passed to the testEnvironment
   // testEnvironmentOptions: {},
@@ -170,11 +170,7 @@ export default {
   // transformIgnorePatterns: [
   //   "/node_modules/"
   // ],
-  transformIgnorePatterns: [
-   'node_modules/(?!(chrt' +
-     // + "|some-folder"
-     ')/)'
-  ],
+  transformIgnorePatterns: ['node_modules/(?!(chrt|chrt-object)/)']
 
   // An array of regexp pattern strings that are matched against all modules before the module loader will automatically return a mock for them
   // unmockedModulePathPatterns: undefined,

@@ -4,6 +4,9 @@ import babel from '@rollup/plugin-babel';
 import { terser } from 'rollup-plugin-terser';
 import * as meta from './package.json';
 
+const STARTED = 2020;
+const YEAR = new Date().getFullYear();
+
 const config = {
   input: 'src/index.js',
   external: Object.keys(meta.dependencies || {}).filter(key =>
@@ -16,9 +19,9 @@ const config = {
     indent: false,
     extend: true,
     exports: 'named',
-    banner: `// ${meta.homepage} v${
-      meta.version
-    } Copyright ${new Date().getFullYear()} ${meta.author}`,
+    banner: `// ${meta.name} v${meta.version} Copyright ${
+      YEAR !== STARTED ? `${STARTED}-` : ''
+    }${YEAR} ${meta.author} ${meta.homepage}`,
     globals: Object.assign(
       {},
       ...Object.keys(meta.dependencies || {})
@@ -64,13 +67,13 @@ export default [
       })
     ]
   },
-  {
-    ...config,
-    output: {
-      ...config.output,
-      format: 'cjs',
-      file: `dist/${meta.name}.node.js`
-    },
-    plugins: [...config.plugins]
-  }
+  // {
+  //   ...config,
+  //   output: {
+  //     ...config.output,
+  //     format: 'cjs',
+  //     file: `dist/${meta.name}.node.js`
+  //   },
+  //   plugins: [...config.plugins]
+  // }
 ];
