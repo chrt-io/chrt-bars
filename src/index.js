@@ -1,2 +1,2 @@
-export { default as chrtBars } from './chrtBars/chrtBars';
-export { default as chrtColumns } from './chrtBars/chrtColumns';
+export { default as chrtBars } from './chrtBars';
+export { default as chrtColumns } from './chrtColumns';

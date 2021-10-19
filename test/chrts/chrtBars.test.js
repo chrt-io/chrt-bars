@@ -1,5 +1,5 @@
 import * as chrt from 'chrt';
-import chrtBars from '~/chrtBars/chrtBars'
+import chrtBars from '~/chrtBars'
 
 describe('Testing chrtBars', () => {
   test('Test getXScale', () => {

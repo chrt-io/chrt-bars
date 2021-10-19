@@ -1,5 +1,5 @@
 import * as chrt from 'chrt';
-import chrtColumns from '~/chrtBars/chrtColumns'
+import chrtColumns from '../../../src/chrtColumns'
 
 const data = new Array(50).fill(1).map((d,i) => ({x: new Date(2021,0,i), y: i})).filter((d,i) => i < 25 || i > 30);
 

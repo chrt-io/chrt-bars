@@ -1,5 +1,5 @@
 import * as chrt from 'chrt';
-import chrtColumns from '~/chrtBars/chrtColumns'
+import chrtColumns from '../../../src/chrtColumns'
 
 const subset = [10,25, 35]
 const data = new Array(50).fill(1).map((d,i) => ({x: i, y: i + 10})).filter((d,i) => subset.indexOf(i) > -1);

@@ -1,5 +1,5 @@
-import { isNull, isInfinity } from '~/helpers';
-import { createSVG as create } from '~/layout';
+import { isNull, isInfinity } from './helpers';
+import { createSVG as create } from './layout';
 import { lineWidth, lineColor, fill, width, fillOpacity, strokeOpacity, inset, binwidth } from './lib';
 import {
   DEFAULT_STROKE_WIDTH,
@@ -12,7 +12,7 @@ import {
   DEFAULT_BAR_INSET,
   MIN_BAR_SIZE,
   ROUND
-} from '~/constants';
+} from './constants';
 import chrtGeneric from 'chrt-object';
 
 function chrtColumns() {

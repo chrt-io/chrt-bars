@@ -1,5 +1,5 @@
 import * as chrt from 'chrt';
-import chrtColumns from '~/chrtBars/chrtColumns'
+import chrtColumns from '../../../src/chrtColumns'
 
 const data = [0,2,6,2,5,9,4,5];
 
