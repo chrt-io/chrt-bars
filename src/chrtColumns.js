@@ -1,5 +1,3 @@
-import { isNull, isInfinity } from './helpers';
-import { createSVG as create } from './layout';
 import { lineWidth, lineColor, fill, width, fillOpacity, strokeOpacity, inset, binwidth } from './lib';
 import {
   DEFAULT_STROKE_WIDTH,
@@ -13,10 +11,11 @@ import {
   MIN_BAR_SIZE,
   ROUND
 } from './constants';
-import chrtGeneric from 'chrt-object';
+import chrtObject, { utils } from 'chrt-object';
+const { isNull, isInfinity, createSVG: create } = utils;
 
 function chrtColumns() {
-  chrtGeneric.call(this);
+  chrtObject.call(this);
   this.type = 'series';
 
   this._stacked = null;
@@ -48,7 +47,8 @@ function chrtColumns() {
     }
     const { _margins, scales } = this.parentNode;
 
-    this._classNames.forEach((d) => this.g.classList.add(d));
+    this.g.classList.remove(...this.g.classList)
+    this.g.classList.add(...this._classNames);
 
     if(isNull(this.fields.x)) {
       this.fields.x = scales.x[this.scales.x].field;
@@ -199,9 +199,9 @@ function chrtColumns() {
 
 }
 
-chrtColumns.prototype = Object.create(chrtGeneric.prototype);
+chrtColumns.prototype = Object.create(chrtObject.prototype);
 chrtColumns.prototype.constructor = chrtColumns;
-chrtColumns.parent = chrtGeneric.prototype;
+chrtColumns.parent = chrtObject.prototype;
 
 chrtColumns.prototype = Object.assign(chrtColumns.prototype, {
   width,

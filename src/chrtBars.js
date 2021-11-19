@@ -1,5 +1,3 @@
-import { isNull, isInfinity } from './helpers';
-import { createSVG as create } from './layout';
 import { lineWidth, lineColor, fill, fillOpacity, strokeOpacity, width, inset, binwidth } from './lib';
 import {
   DEFAULT_STROKE_WIDTH,
@@ -13,10 +11,11 @@ import {
   MIN_BAR_SIZE,
   ROUND
 } from './constants';
-import chrtGeneric from 'chrt-object';
+import chrtObject, { utils } from 'chrt-object';
+const { isNull, isInfinity, createSVG: create } = utils;
 
 function chrtBars() {
-  chrtGeneric.call(this);
+  chrtObject.call(this);
   this.type = 'series';
 
   this._stacked = null;
@@ -51,7 +50,8 @@ function chrtBars() {
     }
     const { _margins, scales } = this.parentNode;
 
-    this._classNames.forEach((d) => this.g.classList.add(d));
+    this.g.classList.remove(...this.g.classList)
+    this.g.classList.add(...this._classNames);
 
     if(isNull(this.fields.y)) {
       this.fields.y = scales.y[this.scales.y].field;
@@ -197,9 +197,9 @@ function chrtBars() {
   };
 }
 
-chrtBars.prototype = Object.create(chrtGeneric.prototype);
+chrtBars.prototype = Object.create(chrtObject.prototype);
 chrtBars.prototype.constructor = chrtBars;
-chrtBars.parent = chrtGeneric.prototype;
+chrtBars.parent = chrtObject.prototype;
 
 chrtBars.prototype = Object.assign(chrtBars.prototype, {
   width,
