@@ -121,7 +121,6 @@ function chrtBars() {
         if(!this.parentNode.originalPadding && _scaleY.transformation !== 'ordinal' && (deltaY < (padding?.bottom ?? 0) || (deltaY > (padding?.top ?? 0)))) {
           const padding = this.parentNode.padding();
           const newPadding = Object.assign({}, padding, {bottom: bw/2 + padding.bottom, top: bw/2 + padding.top})
-          // console.log('newPadding', newPadding)
           return this.parentNode.padding(newPadding, true);
         }
       }
@@ -141,9 +140,9 @@ function chrtBars() {
         const x = _scaleX(d[this._stacked ? `stacked_${this.fields.x}` : this.fields.x]);
         let x0 = !isNull(d[this.fields.x0]) ? (_scaleX.isLog() ? _scaleX.range[0] + _margins.left : _scaleX(d[this.fields.x0])) : null;
         if(isNull(x0)) {
-          x0 = _scaleX.isLog() ? (_scaleX.range[0] - _margins.left) : _scaleX(_scaleX.domain[0] || 0);
+          x0 = _scaleX.isLog() ? (_scaleX.range[0] + _margins.left) : _scaleX(_scaleX.domain[0] || 0);
           if((_scaleX.domain[0] || 0) * (_scaleX.domain[1] || 0) < 0) {
-            x0 = _scaleX.isLog() ? (_scaleX.range[0] - _margins.left) : _scaleX(0);
+            x0 = _scaleX.isLog() ? (_scaleX.range[0] + _margins.left) : _scaleX(0);
           }
         }
 
@@ -160,7 +159,6 @@ function chrtBars() {
         const anchorPoints = {};
         anchorPoints.x = (isNaN(_barX) || isInfinity(_barX) ? _scaleX.range[0] : _barX) + strokeWidth * 0.5;
 
-        // console.log('--------->', x,' > ',x0)
         anchorPoints.directions = {
           x: x > x0 ? 1 : 0,
           y: 1,

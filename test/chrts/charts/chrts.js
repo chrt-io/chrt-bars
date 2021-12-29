@@ -1,9 +1,11 @@
 export { default as columnsXOrdinalYLinear } from './columns-x-ordinal-y-linear.js';
+export { default as columnsXOrdinalYLog } from './columns-x-ordinal-y-log.js';
 export { default as columnsXLinearYLinear } from './columns-x-linear-y-linear.js';
 export { default as columnsXLogYLinear } from './columns-x-log-y-linear.js';
 export { default as columnsXTimeYLinear } from './columns-x-time-y-linear.js';
 export { default as stackedColumnsXOrdinalYLinear } from './stacked-columns-x-ordinal-y-linear.js';
 export { default as barsYOrdinalXLinear } from './bars-y-ordinal-x-linear.js';
+export { default as barsYOrdinalXLog } from './bars-y-ordinal-x-log.js';
 export { default as barsYLinearXLinear } from './bars-y-linear-x-linear.js';
 export { default as stackedBarsYOrdinalXLinear } from './stacked-bars-y-ordinal-x-linear.js';
 export { default as columnsNegativePositiveValues } from './columns-negative-positive-values.js';
