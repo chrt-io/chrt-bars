@@ -11,7 +11,7 @@ import {
   MIN_BAR_SIZE,
   ROUND
 } from './constants';
-import chrtObject, { utils } from 'chrt-object';
+import chrtObject, { utils, cssDisplay } from 'chrt-object';
 const { isNull, isInfinity, createSVG: create } = utils;
 
 function chrtBars() {
@@ -49,6 +49,8 @@ function chrtBars() {
       return this;
     }
     const { _margins, scales } = this.parentNode;
+
+    cssDisplay.call(this, this.attr('display')());
 
     this.g.classList.remove(...this.g.classList)
     this.g.classList.add(...this._classNames);
