@@ -19,3 +19,6 @@ export { default as columnsXLinearYLinearWidthBinWidth } from './columns-x-linea
 export { default as barsXLinearYLinearWidthBinWidth } from './bars-y-linear-x-linear-binwidth.js';
 export { default as stackedColumnsXOrdinalYLinearNegative } from './stacked-columns-x-ordinal-y-linear-negative.js';
 export { default as stackedBarsXOrdinalYLinearNegative } from './stacked-bars-y-ordinal-x-linear-with-negatives';
+export { default as histogramsYLinear } from './histograms-y-linear';
+export { default as histogramsVariableBinsYLinear } from './histograms-variable-bins-y-linear';
+export { default as histogramsYLinearNoBins } from './histograms-y-linear-no-bins';
