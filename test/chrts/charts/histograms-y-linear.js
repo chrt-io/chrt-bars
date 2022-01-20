@@ -15,7 +15,7 @@ export default async function(container) {
     .add(
       chrtHistograms()
         .data(data, d => ({
-          x: d.x0,
+          //x: d.x0,
           y: d.y,
         }))
         .inset(0)
@@ -26,7 +26,7 @@ export default async function(container) {
     .add(
       chrtHistograms()
         .data(data2, d => ({
-          x: d.x0,
+          //x: d.x0,
           y: d.y,
         }))
         .inset(0)
