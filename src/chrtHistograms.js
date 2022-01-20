@@ -78,7 +78,7 @@ function chrtHistograms() {
       const binsData = [..._data.map(d => d.x0), ..._data.map(d => d.x1)];
       const binsExtents = [Math.min(...binsData), Math.max(...binsData)];
 
-      if(_scaleX.domain[0] !== binsExtents[0] || _scaleX.domain[1] !== binsExtents[1]) {
+      if(_scaleX.domain[0] > binsExtents[0] || _scaleX.domain[1] < binsExtents[1]) {
         this.parentNode.x({domain: binsExtents});
       }
 
