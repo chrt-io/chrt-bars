@@ -66,11 +66,12 @@ function chrtHistograms() {
     const _data = this._data.length ? this._data : this.parentNode._data;
 
     if(!isNull(_data)) {
-      if(!_data.some(d => d.x0)) {
+      // console.log(_data)
+      if(!_data.some(d => !isNull(d.x0) || !isNull(d.x))) {
         console.warn('chrtHistograms expects data points to contain x0 and x1 fields')
         return this;
       }
-      if(!_data.some(d => d.x1)) {
+      if(!_data.some(d => !isNull(d.x1))) {
         console.warn('chrtHistograms expects data points to contain x0 and x1 fields')
         return this;
       }
@@ -100,7 +101,8 @@ function chrtHistograms() {
           rect.setAttribute('shape-rendering', 'crispEdges');
           this.g.appendChild(rect);
         }
-        const x0 = _scaleX(d[`${this.fields.x}0`]);
+        const x0 = _scaleX(isNull(d[`${this.fields.x}0`]) ? d[this.fields.x] : d[`${this.fields.x}0`]);
+        // console.log('x0', d[`${this.fields.x}0`], x0)
         if(isNaN(x0)) {
           return;
         }
@@ -112,8 +114,11 @@ function chrtHistograms() {
         _barWidth = Math.abs(x1 - x0);
 
         const y = _scaleY(d[this._stacked ? `stacked_${this.fields.y}` : this.fields.y]);
-        let y0 = !isNull(d[this.fields.y0]) ? _scaleY(d[this.fields.y0]) : null;
+        // let y0 = !isNull(d[this.fields.y0]) ? _scaleY(d[this.fields.y0]) : null;
 
+        //let y0 = _scaleY(d[this._stacked ? `stacked_${this.fields.y}0` : `${this.fields.y}0`]);
+        let y0 = !isNull(d[this._stacked ? `stacked_${this.fields.y}0` : this.fields.y0]) ? _scaleY(d[this._stacked ? `stacked_${this.fields.y}0` : this.fields.y0]) : null;
+        // console.log('y0',d)
         if(isNull(y0)) {
           y0 = _scaleY.isLog() ? (_scaleY.range[0] - _margins.bottom) : _scaleY(_scaleY.domain[0] || 0);
           if((_scaleY.domain[0] || 0) * (_scaleY.domain[1] || 0) < 0) {
@@ -122,6 +127,7 @@ function chrtHistograms() {
         }
 
         const _barLength = !isNaN(y) ? Math.max(Math.abs(y - y0), Math.abs(y - y0) - axisLineWidth / 2) : 0;
+        // console.log(y,'-',y0,'=',_barLength)
         const _barY = y > y0 ? y0 : y;
 
         const strokeWidth = this.attr('strokeWidth')(d, i, arr);

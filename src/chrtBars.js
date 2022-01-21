@@ -140,7 +140,8 @@ function chrtBars() {
           return;
         }
         const x = _scaleX(d[this._stacked ? `stacked_${this.fields.x}` : this.fields.x]);
-        let x0 = !isNull(d[this.fields.x0]) ? (_scaleX.isLog() ? _scaleX.range[0] + _margins.left : _scaleX(d[this.fields.x0])) : null;
+        let x0 = !isNull(d[this._stacked ? `stacked_${this.fields.x}0` : this.fields.x0]) ? (_scaleX.isLog() ? _scaleX.range[0] + _margins.left : _scaleX(d[this._stacked ? `stacked_${this.fields.x}0` : this.fields.x0])) : null;
+        
         if(isNull(x0)) {
           x0 = _scaleX.isLog() ? (_scaleX.range[0] + _margins.left) : _scaleX(_scaleX.domain[0] || 0);
           if((_scaleX.domain[0] || 0) * (_scaleX.domain[1] || 0) < 0) {

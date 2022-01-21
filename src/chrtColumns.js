@@ -137,7 +137,8 @@ function chrtColumns() {
           return;
         }
         const y = _scaleY(d[this._stacked ? `stacked_${this.fields.y}` : this.fields.y]);
-        let y0 = !isNull(d[this.fields.y0]) ? _scaleY(d[this.fields.y0]) : null;
+        //let y0 = !isNull(d[this.fields.y0]) ? _scaleY(d[this.fields.y0]) : null;
+        let y0 = !isNull(d[this._stacked ? `stacked_${this.fields.y}0` : this.fields.y0]) ? _scaleY(d[this._stacked ? `stacked_${this.fields.y}0` : this.fields.y0]) : null;
 
         if(isNull(y0)) {
           y0 = _scaleY.isLog() ? (_scaleY.range[0] - _margins.bottom) : _scaleY(_scaleY.domain[0] || 0);
