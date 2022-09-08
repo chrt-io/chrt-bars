@@ -21,7 +21,7 @@ const data = [
 ];
 
 export default async function(container) {
-  return chrt.Chrt()
+  const chart = chrt.Chrt()
     .node(container)
     .size(600, 200)
     .y({scale:'ordinal'})
@@ -32,8 +32,15 @@ export default async function(container) {
           y: d.x,
         }))
         .width(0.75)
-
+        // .aria({
+        //   label: 'bars',
+        //   items: (d,i,arr) => `${d.y} bar is ${d.x}`
+        // })
+        .aria('my bars')
     )
     .add(chrt.xAxis())
     .add(chrt.yAxis().zero(0))
+
+  console.log(chart)
+  return chart;
 }

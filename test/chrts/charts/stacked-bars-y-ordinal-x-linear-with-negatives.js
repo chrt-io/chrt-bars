@@ -46,7 +46,7 @@ export default async function(container) {
             .fillOpacity(0.5)
         )
         .add(
-          chrtBars()
+          chrt.chrtBars()
             .data(data, d => ({
               x: d.x,
               y: d.y,
@@ -59,7 +59,7 @@ export default async function(container) {
             .fillOpacity(0.5)
         )
         .add(
-          chrtBars()
+          chrt.chrtBars()
             .data(data, d => ({
               x: -d.x,
               y: d.y,
@@ -72,7 +72,7 @@ export default async function(container) {
             .fillOpacity(0.5)
         )
         .add(
-          chrtBars()
+          chrt.chrtBars()
             .data(data, d => ({
               x: -d.x/2,
               y: d.y,

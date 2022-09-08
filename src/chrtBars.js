@@ -55,6 +55,11 @@ function chrtBars() {
     this.g.classList.remove(...this.g.classList)
     this.g.classList.add(...this._classNames);
 
+    // if(this.ariaLabel) {
+      //this.g.setAttribute('aria-label', this.ariaLabel.label ?? this.ariaLabel);
+      this.g.setAttribute('aria-label', this.attr('aria')());
+    //}
+
     if(isNull(this.fields.y)) {
       this.fields.y = scales.y[this.scales.y].field;
     }
@@ -127,21 +132,39 @@ function chrtBars() {
         }
       }
 
+      // remove old points from SVG
+      const dataChildrenDelta = (this.g.childElementCount - this._data.length);
+      // console.log('dataChildrenDelta', dataChildrenDelta)
+      if(dataChildrenDelta > 0) {
+        Array.from({length: dataChildrenDelta}, (_, i) => i + this._data.length).forEach(d => {
+          const dataID = escape(`rect-${name}-${d}`);
+          this.g.querySelector(`[data-id='${dataID}']`).remove();
+        })
+      }
+
       _data.forEach((d, i, arr) => {
-        let rect = this.g.querySelector(`[data-id='rect-${name}-${i}']`);
+        const dataID = escape(`rect-${name}-${i}`);
+        let rect = this.g.querySelector(`[data-id='${dataID}']`);
         if (!rect) {
           rect = create('rect');
-          rect.setAttribute('data-id', `rect-${name}-${i}`);
+          rect.setAttribute('data-id', dataID);
           rect.setAttribute('shape-rendering', 'crispEdges');
+          rect.setAttribute('role', 'graphics-symbol');
+          rect.setAttribute('aria-roledescription', 'bar');
+          rect.setAttribute('tabindex', 0)
           this.g.appendChild(rect);
         }
-        const y = _scaleY(d[this.fields.y]); // - _barWidth / 2;
+        const ariaLabel = this.attr('aria')(d, i, arr);
+        if(ariaLabel) {
+          rect.setAttribute('aria-label', ariaLabel);
+        }
+        const y = _scaleY(d[this.fields.y]);
         if(isNaN(y)) {
           return;
         }
         const x = _scaleX(d[this._stacked ? `stacked_${this.fields.x}` : this.fields.x]);
         let x0 = !isNull(d[this._stacked ? `stacked_${this.fields.x}0` : this.fields.x0]) ? (_scaleX.isLog() ? _scaleX.range[0] + _margins.left : _scaleX(d[this._stacked ? `stacked_${this.fields.x}0` : this.fields.x0])) : null;
-        
+
         if(isNull(x0)) {
           x0 = _scaleX.isLog() ? (_scaleX.range[0] + _margins.left) : _scaleX(_scaleX.domain[0] || 0);
           if((_scaleX.domain[0] || 0) * (_scaleX.domain[1] || 0) < 0) {

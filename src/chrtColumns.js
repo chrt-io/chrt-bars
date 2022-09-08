@@ -124,11 +124,22 @@ function chrtColumns() {
         }
       }
 
+      // remove old points from SVG
+      const dataChildrenDelta = (this.g.childElementCount - this._data.length);
+      // console.log('dataChildrenDelta', dataChildrenDelta)
+      if(dataChildrenDelta > 0) {
+        Array.from({length: dataChildrenDelta}, (_, i) => i + this._data.length).forEach(d => {
+          const dataID = escape(`rect-${name}-${d}`);
+          this.g.querySelector(`[data-id='${dataID}']`).remove();
+        })
+      }
+
       _data.forEach((d, i, arr) => {
-        let rect = this.g.querySelector(`[data-id='rect-${name}-${i}']`);
+        const dataID = escape(`rect-${name}-${i}`);
+        let rect = this.g.querySelector(`[data-id='${dataID}']`);
         if (!rect) {
           rect = create('rect');
-          rect.setAttribute('data-id', `rect-${name}-${i}`);
+          rect.setAttribute('data-id', dataID);
           rect.setAttribute('shape-rendering', 'crispEdges');
           this.g.appendChild(rect);
         }
